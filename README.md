@@ -1,9 +1,11 @@
-# I AM THE FUTURE<br>
+# 🍄 I AM THE FUTURE<br>
+Born in 2001<br>
+
 # 💫 About Me:
 👨‍💻 French engineer passionate about tech, AI and process automation<br>👨‍🎓 Studied Engineering at ECAM LaSalle, France<br>💭 Currently learning Japanese
 
 
-## 🌐 Socials:
+# 🌐 Socials:
 [![Instagram](https://img.shields.io/badge/Instagram-%23E4405F.svg?logo=Instagram&logoColor=white)](https://instagram.com/gregoiretroestler/) [![LinkedIn](https://img.shields.io/badge/LinkedIn-%230077B5.svg?logo=linkedin&logoColor=white)](https://linkedin.com/in/gr%C3%A9goire-troestler/) 
 
 # 💻 Tech Stack:
