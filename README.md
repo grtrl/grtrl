@@ -1,8 +1,5 @@
 # 🍄 I AM THE FUTURE<br>
-Born in 2001<br>
-
-# 💫 About Me:
-👨‍💻 French engineer passionate about tech, AI and process automation<br>👨‍🎓 Studied Engineering at ECAM LaSalle, France<br>💭 Currently learning Japanese
+Born in 2001<br>👨‍💻 French engineer passionate about tech, AI and process automation<br>👨‍🎓 Studied Engineering at ECAM LaSalle, France<br>💭 Currently learning Japanese
 
 
 # 🌐 Socials:
