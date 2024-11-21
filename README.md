@@ -1,4 +1,5 @@
 # 💫 About Me:
+I AM THE FUTURE
 👨‍💻 French engineer passionate about tech, AI and process automation<br>👨‍🎓 Studied Engineering at ECAM LaSalle, France<br>💭 Currently learning Japanese
 
 
