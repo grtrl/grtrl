@@ -13,5 +13,3 @@ Born in 2001<br>👨‍💻 French engineer passionate about tech, AI and proces
 
 ---
 [![](https://visitcount.itsvg.in/api?id=grtrl&icon=0&color=0)](https://visitcount.itsvg.in)
-
-<!-- Proudly created with GPRM ( https://gprm.itsvg.in ) -->
