@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Listes Maps</title>
+  <meta name="theme-color" content="#1a73e8">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Listes Maps">
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="icon" href="/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/icons/icon-180.png">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <button class="icon-btn" id="back" aria-label="Retour" hidden>‹</button>
+    <h1 id="title">Listes Maps</h1>
+    <span class="spacer"></span>
+  </header>
+  <main id="view" aria-live="polite"></main>
+  <nav class="tabbar" id="tabbar">
+    <a href="#/" data-tab="countries"><span>🌍</span>Pays</a>
+    <a href="#/import" data-tab="import"><span>⤓</span>Importer</a>
+    <a href="#/exports" data-tab="exports"><span>⤴</span>Exports</a>
+    <a href="#/settings" data-tab="settings"><span>⚙</span>Réglages</a>
+  </nav>
+  <div id="sheet" class="sheet" hidden></div>
+  <div id="toast" class="toast" role="status" hidden></div>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+)]}'
+[["LISTID",null,null,null,"Week-end à Lisbonne","Description",null,null,[[null,[null,null,"Lisbon",null,"Praça do Comércio, 1100-148 Lisboa, Portugal",[null,null,38.7075,-9.1364],["0x0:0x0","0xd193479c3d7ce9b:0x1234abcd"]],"Praça do Comércio","Coucher de soleil"],[null,[null,null,"Lisbon",null,"Belém, Lisboa",[null,null,38.6916,-9.2160],["x","0xd19cb3a5d6fe1d5:0x5678"]],"Torre de Belém",null]]]]

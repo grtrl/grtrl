@@ -1,0 +1,4 @@
+node_modules
+data
+*.json.bak
+google-session.json
