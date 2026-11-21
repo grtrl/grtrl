@@ -1,0 +1,20 @@
+{
+  "name": "maplists",
+  "version": "1.0.0",
+  "description": "Webapp perso pour organiser et partager ses listes Google Maps (import Google Takeout)",
+  "main": "server.js",
+  "type": "commonjs",
+  "engines": {
+    "node": ">=22.5"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning server.js",
+    "test": "node --disable-warning=ExperimentalWarning --test test/*.test.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "jszip": "^3.10.1",
+    "leaflet": "^1.9.4",
+    "leaflet.markercluster": "^1.5.3"
+  }
+}

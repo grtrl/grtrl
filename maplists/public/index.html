@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Mes listes</title>
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📍</text></svg>">
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="/vendor/markercluster/MarkerCluster.css">
+  <link rel="stylesheet" href="/vendor/markercluster/MarkerCluster.Default.css">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <!-- Écran de connexion -->
+  <section id="auth" class="auth hidden">
+    <div class="auth-card">
+      <h1>📍 Mes listes</h1>
+      <p id="auth-text" class="muted"></p>
+      <form id="auth-form">
+        <input id="auth-password" type="password" autocomplete="current-password" placeholder="Mot de passe" required minlength="8">
+        <button type="submit" class="btn primary" id="auth-btn">Se connecter</button>
+        <p id="auth-error" class="error"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Application -->
+  <div id="app" class="hidden">
+    <header class="topbar">
+      <button class="icon-btn mobile-only" id="toggle-sidebar" aria-label="Listes">☰</button>
+      <div class="brand">📍 <span id="brand-title">Mes listes</span></div>
+      <div id="geo-status" class="geo-status hidden"></div>
+      <div class="topbar-actions">
+        <button class="btn owner-only" id="btn-import">⬆ Importer Takeout</button>
+        <button class="btn owner-only" id="btn-friends">👥 Amis</button>
+        <button class="btn ghost" id="btn-logout">Déconnexion</button>
+      </div>
+    </header>
+
+    <main class="layout">
+      <aside class="sidebar" id="sidebar">
+        <div class="sidebar-head">
+          <h2>Listes</h2>
+          <button class="btn small owner-only" id="btn-new-list">+ Liste</button>
+        </div>
+        <ul id="lists" class="lists"></ul>
+      </aside>
+
+      <section class="panel" id="panel">
+        <div id="list-header" class="list-header"></div>
+        <div class="filters">
+          <input id="f-search" type="search" placeholder="Rechercher (nom, note, tag…)">
+          <div class="filter-row">
+            <select id="f-tag"><option value="">Tous les tags</option></select>
+            <select id="f-status">
+              <option value="">Tous</option>
+              <option value="todo" class="owner-only">À visiter</option>
+              <option value="visited" class="owner-only">Déjà visités</option>
+              <option value="noted">Avec une note</option>
+              <option value="unlocated">Non localisés</option>
+              <option value="approx" class="owner-only">Position à vérifier</option>
+            </select>
+          </div>
+          <div class="filter-row">
+            <select id="f-rating">
+              <option value="0">Toutes notes</option>
+              <option value="3">★★★ et +</option>
+              <option value="4">★★★★ et +</option>
+              <option value="5">★★★★★</option>
+            </select>
+            <select id="f-sort">
+              <option value="name">Tri : nom</option>
+              <option value="recent">Tri : récents</option>
+              <option value="rating">Tri : note</option>
+              <option value="list">Tri : liste</option>
+            </select>
+          </div>
+          <label class="check"><input type="checkbox" id="f-bounds"> Seulement la zone visible sur la carte</label>
+        </div>
+        <div class="count" id="count"></div>
+        <ul id="places" class="places"></ul>
+      </section>
+
+      <section class="map-wrap" id="map-wrap">
+        <div id="map"></div>
+        <div id="place-mode" class="place-mode hidden">Clique sur la carte pour placer « <b id="place-mode-name"></b> » — <a href="#" id="place-mode-cancel">annuler</a></div>
+        <aside id="detail" class="detail hidden"></aside>
+      </section>
+    </main>
+
+    <nav class="mobile-tabs mobile-only">
+      <button data-view="panel" class="active">Lieux</button>
+      <button data-view="map">Carte</button>
+    </nav>
+  </div>
+
+  <!-- Modale générique -->
+  <div id="modal" class="modal hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <button class="icon-btn modal-close" id="modal-close" aria-label="Fermer">✕</button>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/vendor/leaflet/leaflet.js"></script>
+  <script src="/vendor/markercluster/leaflet.markercluster.js"></script>
+  <script src="/vendor/jszip/jszip.min.js"></script>
+  <script src="/app.js"></script>
+</body>
+</html>
