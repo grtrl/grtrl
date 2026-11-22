@@ -290,6 +290,7 @@ div.best{background:var(--surface);border:2px solid var(--accent);border-radius:
           <select id="o-obj">
             <option value="total" selected>Coût total (exploitant + temps des usagers)</option>
             <option value="op">Coût exploitant seul</option>
+            <option value="margin">Marge maximale (au prix réglé)</option>
           </select>
         </label>
         <label for="o-depth">Exploration
@@ -425,6 +426,18 @@ const PARAMS=[
   {id:'smart',label:'Recharge en heures creuses',toggle:true,v:true,
    info:`<p>Quand la demande est faible (la nuit surtout), les véhicules sous 65 % de batterie partent se recharger sans attendre d'être presque vides. Ils sont ainsi pleins au moment de la pointe.</p><p>Sans cette option, les véhicules ne se rechargent que sous 20 %, parfois au pire moment.</p>`},
  ]},
+ {g:'Prix et marge',items:[
+  {id:'fareBase',label:'Prix de base du trajet',min:0,max:8,step:0.1,v:1.5,f:v=>nf(v,2)+' €',
+   info:`<p>Partie fixe du prix payé par le passager pour chaque trajet, quelle que soit la distance.</p><p>Le prix moyen d'un trajet (base + prix au km × distance) est affiché en bas du panneau. C'est la recette qui sert à calculer la marge.</p>`,
+   rep:`Repères : un ticket de bus coûte souvent 1,5 à 2,5 € ; un VTC ou un robotaxi solo 10 à 25 € pour 5 km.`},
+  {id:'fareKm',label:'Prix par km',min:0,max:2,step:0.05,v:0.25,f:v=>nf(v,2)+' €/km',
+   info:`<p>Partie du prix proportionnelle à la distance du trajet direct (pas au détour : le passager ne paie pas les crochets faits pour les autres).</p><p>Un prix au km fait payer plus les longs trajets, qui coûtent aussi plus cher à transporter.</p>`},
+  {id:'overhead',label:'Frais de structure',min:0,max:40,step:1,v:15,f:v=>v+' % des recettes',
+   info:`<p>Dépenses qui ne dépendent pas directement des véhicules, exprimées en pourcentage des recettes : application et paiement, service client, commercial, siège, impôts et taxes sur le chiffre d'affaires.</p>`},
+  {id:'elastic',label:'La demande réagit au prix',toggle:true,v:true,
+   info:`<p>Si l'option est activée, augmenter le prix fait baisser la fréquentation, et inversement. Au prix par défaut (≈ 2,68 € en moyenne, celui qui correspond à la part modale réglée plus haut), l'élasticité vaut −0,4 : 10 % plus cher fait perdre environ 4 % des passagers. Plus le prix monte, plus les usagers y sont sensibles, parce que la voiture, le vélo ou le bus deviennent plus intéressants. Vers 4,2 € en moyenne, 10 % plus cher fait perdre 10 % des passagers.</p><p>C'est ce qui fait qu'il existe un prix qui maximise la marge : trop bas, chaque trajet perd de l'argent ; trop haut, il n'y a plus assez de passagers pour remplir les véhicules.</p>`,
+   rep:`Les études sur les transports publics trouvent en général des élasticités au prix entre −0,2 et −0,5.`},
+ ]},
  {g:'Coûts et climat',items:[
   {id:'vehDay',label:'Coût fixe par véhicule et par jour',min:40,max:300,step:5,v:110,f:v=>v+' €',
    info:`<p>Coût d'un véhicule 8 places par jour, qu'il roule ou non : amortissement du véhicule et du système de conduite autonome, assurance, supervision à distance, nettoyage, dépôts. Ajusté selon la capacité.</p>`,
@@ -441,6 +454,8 @@ const PARAMS=[
 ];
 const P={};PARAMS.forEach(g=>g.items.forEach(p=>P[p.id]=p.v));
 const DEFAULTS={...P};
+const AVG_KM=4.7,REF_FARE=DEFAULTS.fareBase+DEFAULTS.fareKm*AVG_KM;
+const effShare=P=>{if(!P.elastic)return P.share;const x=(P.fareBase+P.fareKm*AVG_KM)/REF_FARE;return P.share*Math.exp(-0.2*(x*x-1))};
 const BUS_KWH_KM=0.3,CAR_CO2_KM=0.17,CAR_COST_KM=0.45,WALK_SPEED=1.3;
 const vehCostF=cap=>0.6+0.05*cap,kmCostF=cap=>0.7+0.0375*cap;
 const dayCost=(P,vkm)=>P.fleet*P.vehDay*vehCostF(P.cap)+vkm*P.kmCost*kmCostF(P.cap);
@@ -455,6 +470,8 @@ Object.assign(INFO,{
  'm:punct':{t:'Ponctualité',h:`<p>Part des passagers arrivés au plus tard 5 minutes après l'heure annoncée à la réservation. Les retards viennent des passagers ajoutés ensuite sur le trajet (dans la limite du détour) et de la congestion qui évolue.</p>`},
  'm:occ':{t:'Passagers par véhicule-km',h:`<p>Nombre moyen de passagers à bord sur chaque km parcouru, km à vide compris. Une voiture particulière est autour de 1,2.</p>`},
  'm:empty':{t:'Km à vide',h:`<p>Part des km parcourus sans aucun passager : aller chercher le premier passager, repositionnement, trajets vers la recharge. Ce sont des km qui coûtent et polluent sans rien transporter.</p>`},
+ 'm:margin':{t:'Marge',h:`<p>Recettes des billets − coût de la flotte (fixe + km) − frais de structure. Le taux de marge est cette marge divisée par les recettes.</p><p>Une marge négative veut dire que le service a besoin d'une subvention, comme la plupart des transports publics (en France, les billets couvrent souvent 20 à 40 % du coût d'un réseau de bus).</p>`},
+ 'm:result':{t:'Résultat',h:`<p>Marge totale sur la période simulée. Sur 7 jours, l'estimation annuelle multiplie la semaine par 52. Sur un lundi seul, pas d'estimation annuelle : le week-end, la demande baisse mais les coûts fixes restent.</p><p>Le prix d'équilibre affiché sous la marge par trajet est le prix moyen qui annulerait la marge à fréquentation égale.</p>`},
  'm:op':{t:'Coût exploitant par trajet',h:`<p>Coût total de la flotte (coûts fixes + coûts au km) divisé par le nombre de trajets réalisés. C'est le prix minimal du billet pour équilibrer l'exploitation, sans marge ni subvention.</p><p class="rep">Comparé à une voiture personnelle à 0,45 €/km tout compris (achat, assurance, carburant, entretien).</p>`},
  'm:total':{t:'Coût total par trajet',h:`<p>Coût exploitant + valeur du temps perdu par l'usager (attente et détour), au tarif réglé dans « Valeur du temps ». Permet de comparer un système moins cher mais plus lent à un système plus cher mais plus rapide.</p>`},
  'm:co2':{t:'CO₂ évité',h:`<p>Émissions si chaque passager transporté avait fait son trajet seul en voiture thermique, moins les émissions de l'électricité consommée par les taxibus.</p>`},
@@ -482,8 +499,8 @@ function buildRail(){
 function setParams(obj){for(const k in obj){P[k]=obj[k];const el=$('#p-'+k);if(!el)continue;const def=PARAMS.flatMap(g=>g.items).find(p=>p.id===k);
   if(def.toggle)el.checked=!!obj[k];else{el.value=obj[k];$('#o-'+k).textContent=def.f(obj[k])}}updateDerived();scheduleLiveReset()}
 function updateDerived(){
-  const daily=P.pop*P.trips*P.share/100,peak=daily*Math.max(...PROF_WD)*DAY_FACTOR[0];
-  $('#derived').innerHTML=`<div>Demandes par jour de semaine <b>${nf(daily)}</b></div><div>Pointe (8 h) <b>${nf(peak)}/h</b> · <b>${nf(peak/AREA_KM2,0)}</b> /km²/h</div><div>Demandes de pointe par véhicule <b>${nf(peak/P.fleet,1)}/h</b></div>`;
+  const daily=P.pop*P.trips*effShare(P)/100,peak=daily*Math.max(...PROF_WD)*DAY_FACTOR[0];
+  $('#derived').innerHTML=`<div>Prix moyen d'un trajet <b>${nf(P.fareBase+P.fareKm*AVG_KM,2)} €</b>${P.elastic?` · part modale effective <b>${nf(effShare(P),1)} %</b>`:''}</div><div>Demandes par jour de semaine <b>${nf(daily)}</b></div><div>Pointe (8 h) <b>${nf(peak)}/h</b> · <b>${nf(peak/AREA_KM2,0)}</b> /km²/h</div><div>Demandes de pointe par véhicule <b>${nf(peak/P.fleet,1)}/h</b></div>`;
 }
 /* popover */
 let popBtn=null;
@@ -501,12 +518,12 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closePop()});
 const DT=15,CHG=2;
 function makeSim(Pin,seed,days){
   const P=Object.assign({},Pin);const rnd=mulberry32(seed);
-  const END=days*86400,cap=P.cap,dw=P.dwell,range=P.range,maxWait=P.wait*60,detour=P.detour/100,shareF=P.share/100;
+  const END=days*86400,cap=P.cap,dw=P.dwell,range=P.range,maxWait=P.wait*60,detour=P.detour/100,shareF=effShare(P)/100;
   const dayNoise=Array.from({length:days},()=>0.94+0.12*rnd());
   const daily=P.pop*P.trips*shareF;
   const V=[];
   for(let i=0;i<P.fleet;i++)V.push({id:i,cur:sampleCum(cMix,rnd()),nxt:-1,tDep:0,tArr:0,free:0,stops:[],load:0,batt:range*(0.6+0.4*rnd()),toCharge:false,depot:-1,rebal:-1,state:0,until:0,idle:true,idleSince:0,km:0});
-  const mkAcc=()=>({onTime:0,walkers:0,walkM:0,req:0,acc:0,rej:0,picked:0,sumWait:0,done:0,sumRide:0,sumDirect:0,vkm:0,vkmEmpty:0,pkm:0,directKm:0,st:[0,0,0,0],samp:0,moving:0,loadSum:0,directT:0});
+  const mkAcc=()=>({rev:0,onTime:0,walkers:0,walkM:0,req:0,acc:0,rej:0,picked:0,sumWait:0,done:0,sumRide:0,sumDirect:0,vkm:0,vkmEmpty:0,pkm:0,directKm:0,st:[0,0,0,0],samp:0,moving:0,loadSum:0,directT:0});
   const hours=Array.from({length:days*24},mkAcc),dayS=Array.from({length:days},mkAcc);
   const tot=Object.assign(mkAcc(),{waitHist:new Float64Array(121),loadKm:new Float64Array(cap+1),maxLoad:0});
   const S={t:0,P,V,hours,dayS,tot,days,END,cong,runTo};
@@ -559,7 +576,7 @@ function makeSim(Pin,seed,days){
     let o,d,tries=0;do{o=sampleCum(co,rnd());d=sampleCum(cd,rnd());tries++}while((o===d||L[o*N+d]<900)&&tries<25);
     if(o===d||L[o*N+d]<900)return;
     const cg=cong(t),direct=D[o*N+d]*cg;
-    const mr=direct*(1+detour)+90;const r={o,d,t,direct,mr,km:L[o*N+d]/1000,lp:t+maxWait,ld:t+maxWait+mr,tPick:-1,pmin:0,wO:0,wD:0,eta:0};
+    const mr=direct*(1+detour)+90;const r={fare:P.fareBase+P.fareKm*L[o*N+d]/1000,o,d,t,direct,mr,km:L[o*N+d]/1000,lp:t+maxWait,ld:t+maxWait+mr,tPick:-1,pmin:0,wO:0,wD:0,eta:0};
     const hh=hours[hIdx(t)],dd=dayS[dIdx(t)];hh.req++;dd.req++;tot.req++;
     const best={c:Infinity,v:null,i:-1,j:-1,tp:0,td:0,rq:null};
     const run=(rq,pen,lim)=>{for(const c of getCands(rq.o,rq.lp,t,cg,lim))evalInsert(c[1],rq,t,cg,best,pen)};
@@ -581,7 +598,7 @@ function makeSim(Pin,seed,days){
     while(St.length&&St[0].node===v.cur){const s=St.shift(),r=s.r,hh=hours[hIdx(r.t)],dd=dayS[dIdx(r.t)];
       if(s.type===0){v.load++;r.tPick=tn;const w=tn-r.t;hh.picked++;hh.sumWait+=w;dd.picked++;dd.sumWait+=w;tot.picked++;tot.sumWait+=w;tot.waitHist[Math.min(120,Math.floor(w/30))]++;if(r.wO||r.wD){tot.walkers++;tot.walkM+=r.wO+r.wD}}
       else{v.load--;const ride=tn-r.tPick;if(tn<=r.eta+300){hh.onTime++;dd.onTime++;tot.onTime++}hh.done++;hh.sumRide+=ride;hh.sumDirect+=r.direct;hh.directT+=r.direct;dd.done++;dd.sumRide+=ride;dd.sumDirect+=r.direct;dd.directKm+=r.km;
-        tot.done++;tot.sumRide+=ride;tot.sumDirect+=r.direct;tot.directKm+=r.km}}
+        tot.done++;tot.sumRide+=ride;tot.sumDirect+=r.direct;tot.directKm+=r.km;tot.rev+=r.fare;dd.rev+=r.fare;hh.rev+=r.fare}}
     if(v.load>tot.maxLoad)tot.maxLoad=v.load;v.free=tn+dw}
   function advance(v,t){
     for(let g=0;g<60;g++){
@@ -638,8 +655,9 @@ function summarize(S){
   const stTot=[0,0,0,0];S.hours.forEach(h=>h.st.forEach((v,i)=>stTot[i]+=v));const stSum=stTot.reduce((a,b)=>a+b,0)||1;
   // worst hour service
   let wh=-1,wr=1;S.hours.forEach((h,i)=>{if(h.req>=20){const r=h.acc/h.req;if(r<wr){wr=r;wh=i}}});
+  const rev=T.rev,ovh=rev*P.overhead/100,margin=rev-cost-ovh;
   const opPerTrip=T.done?cost/T.done:0,timePerTrip=P.vot/3600*(avgWait+Math.max(0,avgRide-avgDirect));
-  return{fill:T.vkm?T.pkm/T.vkm/P.cap:0,punct:T.done?T.onTime/T.done:0,walkShare:T.picked?T.walkers/T.picked:0,avgWalk:T.walkers?T.walkM/T.walkers:0,req:T.req,acc:T.acc,rej:T.rej,done:T.done,service:T.req?T.acc/T.req:0,avgWait,p90,avgRide,avgDirect,detour:avgRide/avgDirect-1,
+  return{rev,ovh,margin,marginDay:margin/days,marginRate:rev?margin/rev:(cost?-1:0),marginPerTrip:T.done?margin/T.done:0,avgFare:T.done?rev/T.done:0,breakEven:T.done?cost/T.done/Math.max(0.05,1-P.overhead/100):0,annual:days>=7?margin/days*7*52:null,fill:T.vkm?T.pkm/T.vkm/P.cap:0,punct:T.done?T.onTime/T.done:0,walkShare:T.picked?T.walkers/T.picked:0,avgWalk:T.walkers?T.walkM/T.walkers:0,req:T.req,acc:T.acc,rej:T.rej,done:T.done,service:T.req?T.acc/T.req:0,avgWait,p90,avgRide,avgDirect,detour:avgRide/avgDirect-1,
     occ:T.vkm?T.pkm/T.vkm:0,emptyShare:T.vkm?T.vkmEmpty/T.vkm:0,vkm:T.vkm,pkm:T.pkm,directKm:T.directKm,cost,opPerTrip,timePerTrip,totalPerTrip:opPerTrip+timePerTrip,
     co2Bus,co2Car,co2Saved:co2Car-co2Bus,kmPerTrip:T.done?T.vkm/T.done:0,directKmPerTrip:T.done?T.directKm/T.done:0,
     peakHour:ph,carsEq,busMoving,chargePeak:pk?pkc/pk:0,stShare:stTot.map(v=>v/stSum),worstHour:wh,worstRate:wr,
@@ -777,13 +795,15 @@ function diagnose(s){const P=s.P,out=[];
   if(s.maxLoad<P.cap-1&&P.cap>4)out.push(['info','Capacité surdimensionnée',`Jamais plus de ${s.maxLoad} passagers à bord pour ${P.cap} places. Des véhicules plus petits coûteraient moins cher pour le même service.`]);
   else if(s.fullShare>0.15)out.push(['info','Véhicules souvent pleins',`${pct(s.fullShare,0)} des km se font complets : quelques places de plus augmenteraient la mutualisation en pointe.`]);
   if(s.detour>0.45)out.push(['warn','Trajets rallongés',`En moyenne ${pct(s.detour,0)} de temps en plus que le trajet direct. Au-delà de 30 à 40 %, les usagers perçoivent le taxibus comme lent.`]);
+  if(s.margin<0)out.push(['bad','Service déficitaire',`Chaque trajet perd ${nf(-s.marginPerTrip,2)} €. Il faudrait un prix moyen d'environ ${nf(s.breakEven,2)} € (contre ${nf(s.avgFare,2)} € aujourd'hui), une flotte mieux remplie, ou une subvention de ${nf(-s.marginDay)} € par jour.`]);
+  else out.push([s.marginRate>=.1?'good':'warn','Service rentable',`Marge de ${nf(s.marginPerTrip,2)} € par trajet (${pct(s.marginRate,0)} des recettes). Le prix pourrait descendre jusqu'à ${nf(s.breakEven,2)} € en moyenne avant de perdre de l'argent, à fréquentation égale.`]);
   out.push([s.opPerTrip<s.carCostPerTrip?'good':'info','Coût comparé',`${nf(s.opPerTrip,2)} € par trajet pour l'exploitant, contre environ ${nf(s.carCostPerTrip,2)} € pour le même trajet en voiture personnelle (${nf(CAR_COST_KM,2)} €/km tout compris).`]);
   return out}
 function renderReport(sim,s,prev){const P=s.P,el=$('#report'),days=sim.days;charts.forEach(c=>{if(el.contains(c))charts.delete(c)});
   const ok=s.service>=0.95&&s.occ>=1.5,mid=s.service>=0.88;
   const vtxt=ok?'Le système tient':mid?'Le système tient de justesse':'Le système ne suit pas';
   const vcol=ok?'var(--good)':mid?'var(--warn)':'var(--bad)';
-  const dl=(k,better)=>{if(!prev)return'';const d=s[k]-prev[k];if(Math.abs(d)<1e-9)return'';const good=better==='up'?d>0:d<0;const f=k==='service'||k==='emptyShare'||k==='fill'||k==='punct'?nf(d*100,1)+' pt':k==='avgWait'?nf(d/60,1)+' min':k==='opPerTrip'||k==='totalPerTrip'?nf(d,2)+' €':nf(d,2);
+  const dl=(k,better)=>{if(!prev)return'';const d=s[k]-prev[k];if(Math.abs(d)<1e-9)return'';const good=better==='up'?d>0:d<0;const f=k==='service'||k==='emptyShare'||k==='fill'||k==='punct'||k==='marginRate'?nf(d*100,1)+' pt':k==='avgWait'?nf(d/60,1)+' min':k==='opPerTrip'||k==='totalPerTrip'||k==='marginPerTrip'?nf(d,2)+' €':nf(d,2);
     return`<div class="delta ${good?'up':'down'}">${d>0?'+':''}${f} vs précédent</div>`};
   const tiles=[
     ['Demandes acceptées',nf(s.service*100,1),'%',`${nf(s.acc)} / ${nf(s.req)}`,grade(s.service,.95,.88),dl('service','up'),'service'],
@@ -797,13 +817,17 @@ function renderReport(sim,s,prev){const P=s.P,el=$('#report'),days=sim.days;char
     ['CO₂ évité',nf(s.co2Saved/1000,1),'t',`${pct(s.co2Car?s.co2Saved/s.co2Car:0,0)} vs tous en voiture`,s.co2Saved>0?'good':'bad','','co2'],
     ['Véhicules en pointe',nf(s.busMoving,0),'',`au lieu de ≈ ${nf(s.carsEq,0)} voitures`,s.busMoving<s.carsEq?'good':'warn','','peak'],
   ];
+  tiles.splice(6,0,
+    ['Marge par trajet',nf(s.marginPerTrip,2),'€',`prix moyen ${nf(s.avgFare,2)} € · équilibre ${nf(s.breakEven,2)} €`,s.margin>=0?(s.marginRate>=.1?'good':'warn'):'bad',dl('marginPerTrip','up'),'margin'],
+    ['Taux de marge',nf(s.marginRate*100,0),'%',`recettes ${nf(s.rev)} € · coûts ${nf(s.cost+s.ovh)} €`,s.margin>=0?(s.marginRate>=.1?'good':'warn'):'bad',dl('marginRate','up'),'margin'],
+    [days>=7?'Résultat estimé par an':'Résultat sur la journée',days>=7?nf(s.annual/1e6,2):nf(s.margin),days>=7?'M€':'€',days>=7?`${nf(s.marginDay)} € par jour en moyenne`:'lancez 7 jours pour une estimation annuelle',s.margin>=0?'good':'bad','','result']);
   if(P.walk>0)tiles.push(['Passagers qui marchent',nf(s.walkShare*100,0),'%',`${nf(s.avgWalk)} m en moyenne`,'','','walk']);
   let h=`<div class="verdict"><span class="pill" style="background:${vcol}">${ok?'OK':mid?'Limite':'Saturé'}</span><div><h2>${vtxt}</h2><p>${days===1?'Lundi':'Semaine complète'} · ${nf(P.fleet)} taxibus de ${P.cap} places pour ${nf(s.req)} demandes. Chaque véhicule a transporté en moyenne ${nf(s.done/P.fleet/days,0)} passagers par jour, en parcourant ${nf(s.kmPerTrip,1)} km par trajet servi (le trajet direct moyen fait ${nf(s.directKmPerTrip,1)} km).</p></div></div>`;
   h+=`<div class="tiles">${tiles.map(t=>`<div class="tile ${t[4]}"><div class="lbl"><span>${t[0]}</span>${infoBtn('m:'+t[6],t[0])}</div><div class="val">${t[1]}<small>${t[2]}</small></div><div class="sub">${t[3]}</div>${t[5]}</div>`).join('')}</div>`;
   h+=`<h2 class="section-title">Diagnostic</h2><div class="diag"><ul>${diagnose(s).map(d=>`<li><span class="chip ${d[0]}">${d[1]}</span><span>${d[2]}</span></li>`).join('')}</ul></div>`;
   h+=`<h2 class="section-title">Heure par heure</h2><div class="charts" id="rcharts"></div>`;
-  if(days>1){h+=`<h2 class="section-title">Jour par jour</h2><div class="tablewrap"><table><thead><tr><th>Jour</th><th>Demandes</th><th>Acceptées</th><th>Attente moy.</th><th>Temps à bord / direct</th><th>Remplissage</th><th>Ponctualité</th><th>Km parcourus</th><th>Coût / trajet</th></tr></thead><tbody>`+
-    sim.dayS.map((d,i)=>{const c=dayCost(P,d.vkm);return`<tr><td>${DAYS_FULL[i%7]}</td><td>${nf(d.req)}</td><td>${d.req?pct(d.acc/d.req):'–'}</td><td>${d.picked?mins(d.sumWait/d.picked):'–'}</td><td>${d.done?'×'+nf(d.sumRide/d.sumDirect,2):'–'}</td><td>${d.vkm?pct(d.pkm/d.vkm/P.cap,0):'–'}</td><td>${d.done?pct(d.onTime/d.done,0):'–'}</td><td>${nf(d.vkm)}</td><td>${d.done?nf(c/d.done,2)+' €':'–'}</td></tr>`}).join('')+`</tbody></table></div>`}
+  if(days>1){h+=`<h2 class="section-title">Jour par jour</h2><div class="tablewrap"><table><thead><tr><th>Jour</th><th>Demandes</th><th>Acceptées</th><th>Attente moy.</th><th>Temps à bord / direct</th><th>Remplissage</th><th>Ponctualité</th><th>Km parcourus</th><th>Coût / trajet</th><th>Marge</th></tr></thead><tbody>`+
+    sim.dayS.map((d,i)=>{const c=dayCost(P,d.vkm);return`<tr><td>${DAYS_FULL[i%7]}</td><td>${nf(d.req)}</td><td>${d.req?pct(d.acc/d.req):'–'}</td><td>${d.picked?mins(d.sumWait/d.picked):'–'}</td><td>${d.done?'×'+nf(d.sumRide/d.sumDirect,2):'–'}</td><td>${d.vkm?pct(d.pkm/d.vkm/P.cap,0):'–'}</td><td>${d.done?pct(d.onTime/d.done,0):'–'}</td><td>${nf(d.vkm)}</td><td>${d.done?nf(c/d.done,2)+' €':'–'}</td><td>${nf(d.rev*(1-P.overhead/100)-c)} €</td></tr>`}).join('')+`</tbody></table></div>`}
   el.innerHTML=h;
   const H=sim.hours,lab=H.map((_,i)=>days>1?DAYS[Math.floor(i/24)%7]:String(i%24).padStart(2,'0')+'h'),tl=H.map((_,i)=>(days>1?DAYS[Math.floor(i/24)%7]+' ':'')+String(i%24).padStart(2,'0')+':00');
   const box=$('#rcharts');const xe=days>1?24:3;
@@ -834,7 +858,7 @@ async function findFleet(base,target,log,guess){
 async function optimize(){
   optAbort=false;$('#optgo').disabled=true;$('#optstop').disabled=false;
   const target=+$('#o-target').value,obj=$('#o-obj').value,full=$('#o-depth').value==='full';
-  const base={...P},score=r=>obj==='op'?r.opPerTrip:r.totalPerTrip;
+  const base={...P},score=r=>obj==='op'?r.opPerTrip:obj==='margin'?-r.marginDay:r.totalPerTrip;
   const rows=[],points=[];let nsim=0;const est=full?95:40;const t0=performance.now();
   const el=$('#optres');el.innerHTML=`<div class="charts"><div class="chart" id="oscat"><h3>Flottes testées : taux de service selon le nombre de véhicules</h3><div class="clegend" id="oleg"></div><div class="cb"></div></div><div class="chart"><h3>Configurations retenues</h3><div class="tablewrap" style="border:0"><table id="otab"></table></div></div></div>`;
   const log=async(p,r)=>{nsim++;points.push({f:p.fleet,s:r.service,cap:p.cap});$('#oprog').style.width=Math.min(100,nsim/est*100)+'%';
@@ -854,8 +878,8 @@ async function optimize(){
   if(rows.length)renderBest(rows,obj,target,base);
   $('#optgo').disabled=false;$('#optstop').disabled=true}
 function renderOptTable(rows,obj){const best=rows.reduce((a,b)=>b.sc<a.sc?b:a,rows[0]);
-  $('#otab').innerHTML=`<thead><tr><th>Configuration</th><th>Flotte</th><th>Servi</th><th>Attente</th><th>Détour réel</th><th>Pass./véh-km</th><th>€ exploitant</th><th>€ total</th></tr></thead><tbody>`+
-  rows.map(r=>`<tr class="${r===best?'best':''}"><td>${r.label}</td><td>${nf(r.fleet)}</td><td>${pct(r.r.service,0)}</td><td>${mins(r.r.avgWait)}</td><td>+${nf(r.r.detour*100,0)} %</td><td>${nf(r.r.occ,2)}</td><td>${nf(r.r.opPerTrip,2)}</td><td>${nf(r.r.totalPerTrip,2)}</td></tr>`).join('')+'</tbody>'}
+  $('#otab').innerHTML=`<thead><tr><th>Configuration</th><th>Flotte</th><th>Servi</th><th>Attente</th><th>Détour réel</th><th>Pass./véh-km</th><th>€ exploitant</th><th>€ total</th><th>Marge / jour</th></tr></thead><tbody>`+
+  rows.map(r=>`<tr class="${r===best?'best':''}"><td>${r.label}</td><td>${nf(r.fleet)}</td><td>${pct(r.r.service,0)}</td><td>${mins(r.r.avgWait)}</td><td>+${nf(r.r.detour*100,0)} %</td><td>${nf(r.r.occ,2)}</td><td>${nf(r.r.opPerTrip,2)}</td><td>${nf(r.r.totalPerTrip,2)}</td><td>${nf(r.r.marginDay)} €</td></tr>`).join('')+'</tbody>'}
 function renderBest(rows,obj,target,base){const best=rows.reduce((a,b)=>b.sc<a.sc?b:a,rows[0]),r=best.r;
   const capRows=rows.filter(x=>x.p.detour===base.detour&&x.p.rebal===base.rebal&&x.p.smart===base.smart);
   const rb=rows.find(x=>x.p.rebal!==best.p.rebal&&x.p.cap===best.p.cap),sm=rows.find(x=>x.p.smart!==best.p.smart&&x.p.cap===best.p.cap);
@@ -893,6 +917,7 @@ const GOALS=[
  {id:'punct',label:'Ponctualité (≤ heure annoncée + 5 min)',dir:1,v:95,unit:'%',get:s=>s.punct*100,on:true,mk:'m:punct'},
  {id:'wait',label:'Attente moyenne',dir:-1,v:6,unit:'min',get:s=>s.avgWait/60,on:false,mk:'m:wait'},
  {id:'detour',label:'Temps en plus vs direct',dir:-1,v:40,unit:'%',get:s=>s.detour*100,on:false,mk:'m:detour'},
+ {id:'margin',label:'Taux de marge',dir:1,v:10,unit:'%',get:s=>s.marginRate*100,on:false,mk:'m:margin'},
  {id:'cost',label:'Coût exploitant par trajet',dir:-1,v:3,unit:'€',get:s=>s.opPerTrip,on:false,mk:'m:op'},
 ];
 const LEVERS=[
@@ -902,6 +927,7 @@ const LEVERS=[
  {id:'wait',label:'Attente max (min)',min:5,max:20,step:1,on:false},
  {id:'walk',label:'Marche max (m)',min:0,max:1000,step:500,on:false},
  {id:'share',label:'Part modale (%)',min:2,max:25,step:1,on:true},
+ {id:'fareBase',label:'Prix de base (€)',min:0.5,max:6,step:0.1,on:false},
 ];
 function buildGoalForm(){
   $('#goals').innerHTML=GOALS.map(g=>`<div class="grow ${g.on?'':'off'}" id="gr-${g.id}"><input type="checkbox" id="gc-${g.id}" ${g.on?'checked':''} aria-label="Activer : ${g.label}"><label for="gv-${g.id}">${g.label} ${infoBtn(g.mk,g.label)}</label><span class="rng">${g.dir>0?'≥':'≤'} <input type="number" id="gv-${g.id}" value="${g.v}" step="any"> ${g.unit}</span></div>`).join('');
@@ -922,7 +948,7 @@ async function solveGoals(){
   const sample=()=>{const c={};levers.forEach(l=>c[l.id]=snap(l,l.log?Math.exp(Math.log(l.min)+rnd()*(Math.log(l.max)-Math.log(l.min))):l.min+rnd()*(l.max-l.min)));return c};
   const perturb=(c,sc)=>{const n={...c};levers.forEach(l=>{if(rnd()<0.7){const span=l.log?n[l.id]*sc*1.5:(l.max-l.min)*sc;n[l.id]=snap(l,n[l.id]+gauss()*Math.max(span,l.step))}});return n};
   const viol=s=>goals.reduce((a,g)=>{const v=g.get(s),den=Math.max(Math.abs(g.v),1);return a+Math.max(0,g.dir>0?(g.v-v)/den:(v-g.v)/den)},0);
-  const score=r=>r.viol>0?1000+r.viol*100:r.s.opPerTrip;
+  const score=r=>r.viol>0?1000+r.viol*100:-r.s.marginDay/1e6;
   goalPts=[];const t0=performance.now();
   $('#goalres').innerHTML=`<div class="best" id="gsum"><p>Recherche en cours…</p></div><div class="charts"><div class="chart" id="gscat"><h3 id="gscat-t"></h3><div class="clegend"><span><i style="background:var(--good)"></i>atteint tous les objectifs</span><span><i style="background:var(--muted)"></i>n'y arrive pas</span><span><i style="background:var(--ink);height:2px"></i>seuils</span></div><div class="cb"></div></div>
     <div class="chart"><h3>Meilleures valeurs atteintes</h3><ul class="reach" id="greach"></ul></div></div><h2 class="section-title">Combinaisons testées, les plus proches du but d'abord</h2><div class="tablewrap"><table id="gtab"></table></div>`;
@@ -945,13 +971,13 @@ async function solveGoals(){
   $('#goalgo').disabled=false;$('#goalstop').disabled=true}
 function fmtGoal(g,v){return nf(v,g.unit==='€'||g.unit==='min'?1:0)+(g.unit==='%'?' %':' '+g.unit)}
 function renderGoalResults(levers,goals,score){
-  const pts=goalPts,feas=pts.filter(p=>p.viol===0).sort((a,b)=>a.s.opPerTrip-b.s.opPerTrip),sorted=pts.slice().sort((a,b)=>score(a)-score(b));
+  const pts=goalPts,feas=pts.filter(p=>p.viol===0).sort((a,b)=>b.s.marginDay-a.s.marginDay),sorted=pts.slice().sort((a,b)=>score(a)-score(b));
   const best=feas[0]||sorted[0];
   const cfgTxt=c=>levers.map(l=>`<span>${l.label} : ${nf(c[l.id])}</span>`).join('');
   const others=`<span>${nf(P.pop)} hab.</span>`+(levers.some(l=>l.id==='cap')?'':`<span>${P.cap} places</span>`)+(levers.some(l=>l.id==='share')?'':`<span>part modale ${P.share} %</span>`);
   const status=goals.map(g=>{const v=g.get(best.s),ok=g.dir>0?v>=g.v:v<=g.v;return`<span class="${ok?'ok':'ko'}">${ok?'✓':'✗'} ${g.label} ${fmtGoal(g,v)}</span>`}).join(' · ');
   $('#gsum').innerHTML=feas.length?
-   `<div class="eyebrow">${feas.length} combinaison${feas.length>1?'s':''} sur ${pts.length} atteigne${feas.length>1?'nt':''} tous les objectifs</div><h2>La moins chère : ${nf(best.s.opPerTrip,2)} € par trajet</h2><div class="cfg">${cfgTxt(best.cfg)}${others}</div><p>${status}</p><div><button class="btn primary" id="gapply">Appliquer ces paramètres</button></div>`
+   `<div class="eyebrow">${feas.length} combinaison${feas.length>1?'s':''} sur ${pts.length} atteigne${feas.length>1?'nt':''} tous les objectifs</div><h2>La plus rentable : ${nf(best.s.marginDay)} € de marge par jour (${nf(best.s.marginPerTrip,2)} € par trajet, coût ${nf(best.s.opPerTrip,2)} €)</h2><div class="cfg">${cfgTxt(best.cfg)}${others}</div><p>${status}</p><div><button class="btn primary" id="gapply">Appliquer ces paramètres</button></div>`
   :`<div class="eyebrow">Aucune combinaison testée n'atteint tous les objectifs (${pts.length} essais)</div><h2>La plus proche</h2><div class="cfg">${cfgTxt(best.cfg)}${others}</div><p>${status}</p><p>${conflictText(goals)}</p><div><button class="btn" id="gapply">Appliquer la plus proche</button></div>`;
   $('#gapply').addEventListener('click',()=>{setParams(best.cfg);$('#gapply').textContent='Appliqué ✓'});
   // reach list
@@ -959,8 +985,8 @@ function renderGoalResults(levers,goals,score){
     const rest=goals.filter(x=>x!==g).map(x=>`${x.label.split(' (')[0].toLowerCase()} ${fmtGoal(x,x.get(b.s))}`).join(', ');
     return`<li><span class="${ok?'ok':'ko'}">${g.label} : ${fmtGoal(g,v)}</span> <span class="note">(objectif ${g.dir>0?'≥':'≤'} ${fmtGoal(g,g.v)}) avec ${levers.map(l=>l.label.toLowerCase()+' '+nf(b.cfg[l.id])).join(', ')}${rest?` ; mais alors ${rest}`:''}.</span></li>`}).join('');
   // table
-  $('#gtab').innerHTML=`<thead><tr>${levers.map(l=>`<th>${l.label}</th>`).join('')}${goals.map(g=>`<th>${g.label.split(' (')[0]}</th>`).join('')}<th>€ / trajet</th></tr></thead><tbody>`+
-    sorted.slice(0,15).map(p=>`<tr class="${p===best?'best':''}">${levers.map(l=>`<td>${nf(p.cfg[l.id])}</td>`).join('')}${goals.map(g=>{const v=g.get(p.s),ok=g.dir>0?v>=g.v:v<=g.v;return`<td class="${ok?'ok':'ko'}">${fmtGoal(g,v)}</td>`}).join('')}<td>${nf(p.s.opPerTrip,2)}</td></tr>`).join('')+'</tbody>';
+  $('#gtab').innerHTML=`<thead><tr>${levers.map(l=>`<th>${l.label}</th>`).join('')}${goals.map(g=>`<th>${g.label.split(' (')[0]}</th>`).join('')}<th>€ / trajet</th><th>Marge / jour</th></tr></thead><tbody>`+
+    sorted.slice(0,15).map(p=>`<tr class="${p===best?'best':''}">${levers.map(l=>`<td>${nf(p.cfg[l.id])}</td>`).join('')}${goals.map(g=>{const v=g.get(p.s),ok=g.dir>0?v>=g.v:v<=g.v;return`<td class="${ok?'ok':'ko'}">${fmtGoal(g,v)}</td>`}).join('')}<td>${nf(p.s.opPerTrip,2)}</td><td>${nf(p.s.marginDay)} €</td></tr>`).join('')+'</tbody>';
   drawGoalScatter()}
 function conflictText(goals){
   const pts=goalPts;if(pts.length<4)return'';
@@ -990,7 +1016,7 @@ buildGoalForm();
 
 /* =================== Learn =================== */
 function renderLearn(){
-  const daily=P.pop*P.trips*P.share/100,peak=daily*Math.max(...PROF_WD);
+  const daily=P.pop*P.trips*effShare(P)/100,peak=daily*Math.max(...PROF_WD);
   const items=[
    ['La densité de demande décide de tout','1',`<p>Un taxibus ne se remplit que s'il existe, au même moment, d'autres demandes compatibles le long de son chemin. Plus il y a de demandes par km² et par heure, plus la probabilité d'en trouver une dans la fenêtre de détour est grande, et plus chaque véhicule transporte de monde. C'est un effet d'échelle : doubler la demande ne double pas la flotte.</p><p>Avec vos réglages, Bellerive génère <b>${nf(peak)} demandes à l'heure de pointe</b>, soit <b>${nf(peak/AREA_KM2)} par km² et par heure</b>. Faites varier la part modale entre 2 % et 20 % dans le Bilan et regardez le nombre de passagers par véhicule-km : c'est le paramètre qui le fait le plus bouger.</p>`],
    ['La flotte se dimensionne sur la pointe','2',`<p>À 8 h et 18 h, la demande vaut 2 fois la moyenne de la journée, et la congestion rallonge chaque course. La flotte qui suffit à la pointe dort à moitié le reste du temps. Le graphique « Ce que fait la flotte » le montre : beaucoup de véhicules disponibles à 14 h et la nuit.</p><p>Pistes réelles : faire du transport de colis en heures creuses, réserver les recharges et la maintenance pour ces heures-là, étaler la pointe avec une tarification modulée.</p>`],
@@ -1000,6 +1026,7 @@ function renderLearn(){
    ['Marcher un peu pour mieux partager','5 bis',`<p>Si le passager accepte de marcher jusqu'au carrefour voisin, le véhicule n'a plus besoin de faire un crochet dans sa rue. Il garde un itinéraire plus direct pour tous ceux qui sont déjà à bord, ce qui permet d'ajouter des passagers sans dépasser leur détour. C'est le principe des « arrêts virtuels » des services de transport à la demande.</p><p>Comparez dans le Bilan « porte à porte » et « 500 m max » : le remplissage et la ponctualité augmentent, en échange de quelques minutes de marche pour une partie des passagers.</p>`],
    ['Énergie et recharge','6',`<p>Un taxibus roule facilement 150 à 300 km par jour. Si les véhicules se rechargent quand leur batterie est vide, une partie de la flotte est immobilisée en pleine pointe. Planifier la recharge la nuit et en milieu de journée, et dimensionner autonomie et bornes en conséquence, revient à gagner des véhicules gratuitement.</p>`],
    ['La route reste partagée','7',`<p>Tant que les taxibus circulent dans le même trafic que les voitures, ils subissent la congestion : l'attente et les détours explosent en pointe. Dans le modèle, chaque point de part modale gagné retire un peu de voitures et allège la congestion. Des voies réservées, une priorité aux feux et des points d'arrêt hors chaussée changent fortement le résultat.</p><p>Attention à l'effet inverse : si le taxibus attire surtout des gens qui marchaient, pédalaient ou prenaient le métro, il ajoute des véhicules au lieu d'en retirer.</p>`],
+   ['Où se fait la marge','7 bis',`<p>La marge par trajet vaut le prix moins le coût par trajet. Ce coût dépend presque entièrement du nombre de passagers que chaque véhicule transporte par jour, car l'essentiel est fixe (véhicule, supervision, assurance). Un taxibus qui transporte 90 personnes par jour à 110 € de coût fixe revient à environ 1,2 € par passager avant les km ; à 40 passagers par jour, c'est 2,75 €.</p><p>Les leviers de marge sont donc les mêmes que ceux du remplissage : densité de demande, taille de flotte ajustée à la pointe, détour accepté. Le prix est un levier à double tranchant quand la demande y réagit. Dans l'optimiseur, cochez le levier « Prix de base » et l'objectif « Taux de marge » pour trouver le prix et la flotte qui rapportent le plus tout en gardant un bon service.</p>`],
    ['Ce que le modèle ne dit pas','8',`<p>L'acceptabilité d'un véhicule sans chauffeur partagé avec des inconnus (sécurité, propreté, supervision à distance), l'accessibilité pour les personnes à mobilité réduite, le prix payé par l'usager, et la réglementation. Ce sont souvent eux qui décident du succès, plus que l'algorithme.</p>`],
   ];
   let h=items.map(i=>`<article><h3><span class="rank">${i[1]}</span>${i[0]}</h3>${i[2]}</article>`).join('');
