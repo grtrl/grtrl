@@ -136,7 +136,7 @@ tr:last-child td{border-bottom:0}
 /* optimizer */
 .optform{display:flex;flex-wrap:wrap;gap:12px 18px;align-items:end;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:14px;margin-bottom:16px}
 .optform label{display:grid;gap:4px;font-size:13px;font-weight:500}
-.best{background:var(--surface);border:2px solid var(--accent);border-radius:10px;padding:16px;margin-bottom:16px;display:grid;gap:10px}
+div.best{background:var(--surface);border:2px solid var(--accent);border-radius:10px;padding:16px;margin-bottom:16px;display:grid;gap:10px}
 .best h2{font-size:24px}
 .best .cfg{display:flex;flex-wrap:wrap;gap:8px}
 .best .cfg span{font-family:var(--f-mono);font-size:13px;background:var(--surface-2);padding:4px 10px;border-radius:6px}
@@ -152,6 +152,35 @@ tr:last-child td{border-bottom:0}
 .learn .wide{grid-column:1/-1}
 .formula{font-family:var(--f-mono);font-size:13px;background:var(--surface-2);padding:10px 12px;border-radius:8px;overflow-x:auto;white-space:nowrap}
 .note{font-size:13px;color:var(--muted)}
+/* info popovers */
+.plabel{display:flex;align-items:center;gap:6px;min-width:0}
+.info{width:18px;height:18px;flex:0 0 18px;border-radius:50%;border:1px solid var(--muted);background:transparent;color:var(--muted);font:italic 700 11px/1 Georgia,serif;cursor:pointer;display:inline-grid;place-items:center;padding:0}
+.info:hover,.info[aria-expanded=true]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.pop{position:absolute;z-index:50;width:min(340px,calc(100vw - 32px));background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;box-shadow:0 10px 30px rgba(10,25,35,.18);padding:12px 14px;font-size:13.5px;line-height:1.5}
+.pop h4{font-family:var(--f-display);font-size:17px;margin:0 0 6px;padding-right:20px}
+.pop p{margin:0 0 6px}.pop p:last-child{margin:0}
+.pop .x{position:absolute;top:6px;right:8px;border:0;background:none;color:var(--muted);font-size:18px;cursor:pointer}
+.pop .rep{font-size:12.5px;color:var(--muted);border-top:1px solid var(--line);padding-top:6px;margin-top:6px}
+.tile .lbl{display:flex;justify-content:space-between;gap:6px;align-items:center}
+.railtop{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 0 4px;border-bottom:1px solid var(--line)}
+.railtop b{font-family:var(--f-display);font-size:19px}
+.btn.small{font-size:12.5px;padding:5px 10px}
+/* optimizer modes */
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:9px;overflow:hidden;margin-bottom:14px;background:var(--surface)}
+.seg button{border:0;background:none;padding:8px 16px;font:600 14px var(--f-body);color:var(--muted);cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--accent);color:var(--surface)}
+.goalgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px}
+@media (max-width:860px){.goalgrid{grid-template-columns:1fr}}
+.goalgrid .card h3{display:flex;justify-content:space-between;align-items:center}
+.grow{display:grid;grid-template-columns:auto 1fr auto;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line);font-size:13.5px}
+.grow:last-child{border-bottom:0}
+.grow input[type=number]{width:74px;font:13px var(--f-mono);padding:5px 6px;border:1px solid var(--line);border-radius:6px;background:var(--surface-2);color:var(--ink)}
+.grow .rng{display:flex;gap:4px;align-items:center;font-family:var(--f-mono);font-size:12px;color:var(--muted)}
+.grow .rng input{width:64px}
+.grow.off{opacity:.5}
+.ok{color:var(--good);font-weight:600}.ko{color:var(--bad);font-weight:600}
+.reach{display:grid;gap:6px;margin:0;padding:0}
+.reach li{list-style:none;font-size:14px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -232,6 +261,27 @@ tr:last-child td{border-bottom:0}
 
     <!-- OPTIMIZER -->
     <section id="tab-opt" role="tabpanel" hidden>
+      <div class="seg" role="group" aria-label="Mode de l'optimiseur">
+        <button id="m-goal" aria-pressed="true">Atteindre des objectifs</button>
+        <button id="m-cost" aria-pressed="false">Coût minimal</button>
+      </div>
+      <div id="mode-goal">
+        <div class="goalgrid">
+          <div class="card"><h3>Ce que je veux obtenir <button class="info" type="button" data-info="o:goals" aria-label="À propos des objectifs">i</button></h3><div id="goals"></div></div>
+          <div class="card"><h3>Ce que l'optimiseur peut changer <button class="info" type="button" data-info="o:levers" aria-label="À propos des leviers">i</button></h3><div id="levers"></div>
+            <p class="note" style="margin:8px 0 0">Les leviers décochés gardent la valeur réglée à gauche.</p></div>
+        </div>
+        <div class="optform">
+          <label for="g-budget">Nombre de journées à simuler
+            <select id="g-budget"><option value="25">25 (rapide)</option><option value="50" selected>50</option><option value="100">100 (précis)</option></select>
+          </label>
+          <button class="btn primary" id="goalgo">Chercher les paramètres</button>
+          <button class="btn" id="goalstop" disabled>Arrêter</button>
+        </div>
+        <div class="runbar"><div class="progress" aria-hidden="true"><div id="gprog"></div></div><span class="status" id="gstatus">L'optimiseur tire des combinaisons au hasard dans les plages choisies, simule un lundi pour chacune, puis affine autour des meilleures.</span></div>
+        <div id="goalres"><div class="empty">Exemple : remplissage moyen d'au moins 70 % des places, 95 % des demandes acceptées et 95 % des passagers à l'heure. Lancez la recherche pour savoir quelles combinaisons y arrivent, ou jusqu'où on peut aller.</div></div>
+      </div>
+      <div id="mode-cost" hidden>
       <div class="optform">
         <label for="o-target">Taux de service visé
           <select id="o-target"><option value="0.9">90 %</option><option value="0.95" selected>95 %</option><option value="0.98">98 %</option></select>
@@ -250,7 +300,9 @@ tr:last-child td{border-bottom:0}
       </div>
       <div class="runbar"><div class="progress" aria-hidden="true"><div id="oprog"></div></div><span class="status" id="ostatus">Pour chaque configuration, l'optimiseur cherche par dichotomie la plus petite flotte qui atteint le taux de service visé sur un lundi, puis compare les coûts.</span></div>
       <div id="optres"><div class="empty">Ville, demande, attente max et coûts restent ceux de gauche. L'optimiseur fait varier la capacité des véhicules, la tolérance au détour, le rééquilibrage et la recharge, et dimensionne la flotte pour chaque cas.</div></div>
+      </div>
     </section>
+    <div class="pop" id="pop" hidden role="dialog" aria-live="polite"><button class="x" type="button" aria-label="Fermer">×</button><div id="popc"></div></div>
 
     <!-- LEARN -->
     <section id="tab-learn" role="tabpanel" hidden>
@@ -296,6 +348,7 @@ for(let i=0;i<N;i++){D[i*N+i]=0;NX[i*N+i]=i}
 for(const [a,b] of EDGES){D[a*N+b]=D[b*N+a]=ET[a*N+b];L[a*N+b]=L[b*N+a]=SP;NX[a*N+b]=b;NX[b*N+a]=a}
 for(let k=0;k<N;k++)for(let i=0;i<N;i++){const dik=D[i*N+k];if(dik===Infinity)continue;const lik=L[i*N+k],nik=NX[i*N+k];
   for(let j=0;j<N;j++){const nd=dik+D[k*N+j];if(nd<D[i*N+j]){D[i*N+j]=nd;L[i*N+j]=lik+L[k*N+j];NX[i*N+j]=nik}}}
+const WALKN=Array.from({length:N},(_,i)=>{const a=[];for(let j=0;j<N;j++)if(j!==i&&L[i*N+j]<=1000)a.push(j);return a});
 const NEAR_DEP=new Int16Array(N);
 for(let i=0;i<N;i++){let b=DEPOTS[0];for(const d of DEPOTS)if(D[i*N+d]<D[i*N+b])b=d;NEAR_DEP[i]=b}
 // land use weights
@@ -334,45 +387,96 @@ const BLOCKW=[0,1].map(we=>Array.from({length:24},(_,h)=>{const m=purposeMix(h,w
 /* =================== Parameters =================== */
 const PARAMS=[
  {g:'Ville et demande',items:[
-  {id:'pop',label:'Population',min:20000,max:400000,step:10000,v:120000,f:v=>nf(v)+' hab.'},
-  {id:'trips',label:'Déplacements / habitant / jour',min:1.5,max:4,step:0.1,v:2.8,f:v=>nf(v,1)},
-  {id:'share',label:'Part des trajets en taxibus',min:1,max:30,step:1,v:6,f:v=>v+' %',help:'Le reste se fait à pied, à vélo, en voiture ou en transport classique.'},
-  {id:'traffic',label:'Congestion en heure de pointe',min:0,max:1.5,step:0.05,v:0.6,f:v=>'+'+nf(v*100)+' %',help:'Temps de parcours en plus à 8 h et 18 h. Les voitures retirées par le taxibus la réduisent un peu.'},
+  {id:'pop',label:'Population',min:20000,max:400000,step:10000,v:120000,f:v=>nf(v)+' hab.',
+   info:`<p>Nombre d'habitants de Bellerive. La surface de la ville ne change pas (56 km²) : ajouter des habitants augmente la densité de demande, ce qui aide les taxibus à trouver des passagers qui vont dans la même direction.</p><p>Avec les déplacements par habitant et la part modale, ce paramètre fixe le nombre de demandes par jour (affiché en bas de ce panneau).</p>`,
+   rep:`Repères : 120 000 hab. sur 56 km² ≈ 2 100 hab./km², une ville moyenne. San Francisco ≈ 7 000, Paris ≈ 20 000 hab./km².`},
+  {id:'trips',label:'Déplacements / habitant / jour',min:1.5,max:4,step:0.1,v:2.8,f:v=>nf(v,1),
+   info:`<p>Nombre moyen de trajets qu'un habitant fait dans une journée de semaine, tous modes confondus : aller au travail, en revenir, courses, école, loisirs. Un aller-retour compte pour deux.</p><p>Le week-end, le modèle réduit le volume (−15 % le samedi, −28 % le dimanche) et étale la demande sur la journée.</p>`,
+   rep:`Repères : les enquêtes de mobilité trouvent en général 3 à 4 déplacements par personne et par jour.`},
+  {id:'share',label:'Part des trajets en taxibus',min:1,max:30,step:1,v:6,f:v=>v+' %',
+   info:`<p>Part modale : sur tous les déplacements des habitants, combien se font en taxibus. Le reste se fait à pied, à vélo, en voiture ou en transport classique et n'est pas simulé, sauf à travers la congestion.</p><p>C'est le levier qui fait le plus varier le remplissage : plus il y a de demandes en même temps, plus il est facile de regrouper les passagers.</p>`,
+   rep:`Repères : dans les villes moyennes françaises, le bus pèse souvent entre 5 et 15 % des déplacements.`},
+  {id:'traffic',label:'Congestion en heure de pointe',min:0,max:1.5,step:0.05,v:0.6,f:v=>'+'+nf(v*100)+' %',
+   info:`<p>Allongement des temps de parcours aux heures les plus chargées (8 h et 18 h), par rapport à une ville vide. À +60 %, un trajet de 10 min la nuit en prend 16 en pointe. La congestion suit la courbe de la journée.</p><p>Les taxibus roulent dans le même trafic que les voitures : la congestion rallonge les courses, immobilise plus de véhicules et rend les heures d'arrivée moins fiables. Chaque point de part modale gagné retire un peu de voitures et allège la congestion.</p>`},
  ]},
  {g:'Flotte',items:[
-  {id:'fleet',label:'Nombre de taxibus',min:10,max:1500,step:10,v:220,f:v=>nf(v)},
-  {id:'cap',label:'Places par véhicule',min:2,max:20,step:1,v:8,f:v=>v+' places'},
-  {id:'range',label:'Autonomie batterie',min:100,max:500,step:10,v:250,f:v=>v+' km'},
-  {id:'charge',label:'Recharge complète',min:20,max:240,step:10,v:60,f:v=>v+' min'},
+  {id:'fleet',label:'Nombre de taxibus',min:10,max:1500,step:10,v:220,f:v=>nf(v),
+   info:`<p>Nombre de véhicules en service, disponibles 24 h/24 sauf pendant leurs recharges.</p><p>Trop peu de véhicules : refus et longues attentes en pointe. Trop : véhicules peu remplis, beaucoup de km à vide et un coût fixe élevé. C'est le principal arbitrage du système.</p>`,
+   rep:`Repère : regardez « demandes de pointe par véhicule » en bas du panneau. Autour de 6 à 8 par heure, le système est en général équilibré ; au-delà de 9, il sature.`},
+  {id:'cap',label:'Places par véhicule',min:2,max:20,step:1,v:8,f:v=>v+' places',
+   info:`<p>Nombre de places passagers. Plus de places permet de regrouper plus de monde en pointe, mais le véhicule coûte plus cher : le coût fixe et le coût au km réglés plus bas valent pour un 8 places et sont ajustés selon la taille (un 4 places coûte environ 20 % de moins, un 16 places 40 % de plus).</p><p>Le remplissage se calcule par rapport à cette capacité : un 16 places qui transporte 3 personnes est rempli à 19 %.</p>`},
+  {id:'range',label:'Autonomie batterie',min:100,max:500,step:10,v:250,f:v=>v+' km',
+   info:`<p>Distance qu'un taxibus électrique peut parcourir avec une charge complète. Sous 20 % de batterie, il finit ses courses en cours puis part au dépôt le plus proche (les 4 carrés violets) et devient indisponible.</p><p>Un taxibus roule 150 à 300 km par jour : avec une petite autonomie, une partie de la flotte se recharge en pleine pointe.</p>`},
+  {id:'charge',label:'Recharge complète',min:20,max:240,step:10,v:60,f:v=>v+' min',
+   info:`<p>Temps pour passer de 0 à 100 % de batterie. Une recharge partielle prend un temps proportionnel, plus 5 minutes de manœuvre au dépôt. Le nombre de bornes n'est pas limité dans le modèle.</p>`},
  ]},
  {g:'Qualité de service',items:[
-  {id:'wait',label:'Attente maximale',min:3,max:30,step:1,v:10,f:v=>v+' min',help:'Au-delà, la demande est refusée (l\'usager prend un autre mode).'},
-  {id:'detour',label:'Détour maximal accepté',min:10,max:200,step:5,v:50,f:v=>'+'+v+' %',help:'Temps à bord en plus du trajet direct pour aller chercher ou déposer d\'autres passagers.'},
-  {id:'dwell',label:'Temps d\'arrêt par montée/descente',min:10,max:120,step:5,v:30,f:v=>v+' s'},
-  {id:'rebal',label:'Rééquilibrage des véhicules vides',toggle:true,v:true},
-  {id:'smart',label:'Recharge en heures creuses',toggle:true,v:true},
+  {id:'wait',label:'Attente maximale',min:3,max:30,step:1,v:10,f:v=>v+' min',
+   info:`<p>Délai maximal entre la commande et la montée à bord. Si aucun véhicule ne peut venir dans ce délai sans mettre en retard ses autres passagers, la demande est refusée et l'usager prend un autre mode.</p><p>Une attente max plus longue laisse plus de choix à l'algorithme pour regrouper les passagers, mais l'usager attend plus.</p>`},
+  {id:'detour',label:'Détour maximal accepté',min:10,max:200,step:5,v:50,f:v=>'+'+v+' %',
+   info:`<p>Temps à bord supplémentaire qu'on accepte d'imposer à un passager pour aller chercher ou déposer d'autres personnes, en pourcentage du trajet direct (plus 1,5 min de tolérance). À +50 %, un trajet direct de 10 min peut durer jusqu'à 16,5 min.</p><p>La limite s'applique à chaque passager, y compris quand un nouveau passager est ajouté en cours de route. Le détour moyen réellement subi est affiché dans le bilan.</p>`},
+  {id:'walk',label:'Marche jusqu\'au point de rencontre',min:0,max:1000,step:500,v:0,f:v=>v?v+' m max':'porte à porte',
+   info:`<p>Distance que le passager accepte de marcher pour retrouver le taxibus à un carrefour voisin, au départ ou à l'arrivée. Le système ne le propose que si c'est plus efficace : le véhicule évite un crochet, ce qui permet de regrouper plus de monde.</p><p>Le passager doit avoir le temps d'arriver au point de rencontre (marche à 4,7 km/h, soit environ 6,5 min pour 500 m), et ce temps compte dans son attente. Les carrefours sont espacés de 500 m, d'où les paliers.</p>`,
+   rep:`Les services réels de transport à la demande utilisent souvent des « arrêts virtuels » à 100-300 m. Avec la marche, la simulation est 3 à 6 fois plus lente.`},
+  {id:'dwell',label:'Temps d\'arrêt par montée/descente',min:10,max:120,step:5,v:30,f:v=>v+' s',
+   info:`<p>Temps d'immobilisation à chaque arrêt pour faire monter ou descendre des passagers (ouverture des portes, ceinture, bagages). Il s'ajoute au trajet de tous les passagers à bord : avec beaucoup d'arrêts, il pèse lourd.</p>`},
+  {id:'rebal',label:'Rééquilibrage des véhicules vides',toggle:true,v:true,
+   info:`<p>Toutes les 5 minutes, les véhicules libres depuis plus de 2 minutes sont envoyés vers les quartiers où la demande va arriver dans la demi-heure : quartiers résidentiels le matin, centre et zones d'emploi le soir.</p><p>Cela ajoute des km à vide, mais réduit l'attente et les refus.</p>`},
+  {id:'smart',label:'Recharge en heures creuses',toggle:true,v:true,
+   info:`<p>Quand la demande est faible (la nuit surtout), les véhicules sous 65 % de batterie partent se recharger sans attendre d'être presque vides. Ils sont ainsi pleins au moment de la pointe.</p><p>Sans cette option, les véhicules ne se rechargent que sous 20 %, parfois au pire moment.</p>`},
  ]},
  {g:'Coûts et climat',items:[
-  {id:'vehDay',label:'Coût fixe par véhicule et par jour',min:40,max:300,step:5,v:110,f:v=>v+' €',help:'Amortissement, assurance, supervision à distance, nettoyage.'},
-  {id:'kmCost',label:'Coût par km',min:0.05,max:0.6,step:0.01,v:0.18,f:v=>nf(v,2)+' €',help:'Énergie, pneus, maintenance.'},
-  {id:'vot',label:'Valeur du temps des usagers',min:5,max:40,step:1,v:15,f:v=>v+' €/h'},
-  {id:'grid',label:'Carbone de l\'électricité',min:20,max:600,step:10,v:250,f:v=>v+' g/kWh',help:'France ≈ 50, Europe ≈ 250, Californie ≈ 200, États-Unis ≈ 370.'},
+  {id:'vehDay',label:'Coût fixe par véhicule et par jour',min:40,max:300,step:5,v:110,f:v=>v+' €',
+   info:`<p>Coût d'un véhicule 8 places par jour, qu'il roule ou non : amortissement du véhicule et du système de conduite autonome, assurance, supervision à distance, nettoyage, dépôts. Ajusté selon la capacité.</p>`,
+   rep:`Hypothèse de départ : 110 €/jour, soit environ 40 000 €/an. C'est une estimation, à remplacer par vos chiffres.`},
+  {id:'kmCost',label:'Coût par km',min:0.05,max:0.6,step:0.01,v:0.18,f:v=>nf(v,2)+' €',
+   info:`<p>Coût proportionnel à la distance pour un 8 places : électricité, pneus, entretien, usure. Ajusté selon la capacité.</p>`},
+  {id:'vot',label:'Valeur du temps des usagers',min:5,max:40,step:1,v:15,f:v=>v+' €/h',
+   info:`<p>Combien vaut une heure de la vie d'un usager, utilisée pour convertir l'attente et le détour en euros. Elle sert au « coût total par trajet » et à l'optimiseur en mode coût : un système moins cher mais plus lent n'est pas forcément meilleur.</p>`,
+   rep:`Les évaluations de projets de transport utilisent souvent 10 à 20 € par heure pour les déplacements du quotidien.`},
+  {id:'grid',label:'Carbone de l\'électricité',min:20,max:600,step:10,v:250,f:v=>v+' g/kWh',
+   info:`<p>Émissions de CO₂ pour produire 1 kWh d'électricité, qui dépendent du pays. Le taxibus consomme 0,3 kWh/km. Il est comparé à une voiture thermique (170 g/km) qui ferait chaque trajet en direct.</p>`,
+   rep:`France ≈ 50, moyenne européenne ≈ 250, Californie ≈ 200, États-Unis ≈ 370 g/kWh.`},
  ]},
 ];
 const P={};PARAMS.forEach(g=>g.items.forEach(p=>P[p.id]=p.v));
-const BUS_KWH_KM=0.3,CAR_CO2_KM=0.17,CAR_COST_KM=0.45;
-
+const DEFAULTS={...P};
+const BUS_KWH_KM=0.3,CAR_CO2_KM=0.17,CAR_COST_KM=0.45,WALK_SPEED=1.3;
+const vehCostF=cap=>0.6+0.05*cap,kmCostF=cap=>0.7+0.0375*cap;
+const dayCost=(P,vkm)=>P.fleet*P.vehDay*vehCostF(P.cap)+vkm*P.kmCost*kmCostF(P.cap);
+/* info registry */
+const INFO={};
+PARAMS.forEach(g=>g.items.forEach(p=>INFO['p:'+p.id]={t:p.label,h:p.info+(p.rep?`<p class="rep">${p.rep}</p>`:'')}));
+Object.assign(INFO,{
+ 'm:service':{t:'Demandes acceptées',h:`<p>Part des demandes pour lesquelles un taxibus a pu être proposé en respectant l'attente maximale et le détour de tous les passagers. Les autres sont refusées.</p><p class="rep">Un service public vise en général plus de 95 %.</p>`},
+ 'm:wait':{t:'Attente moyenne',h:`<p>Temps moyen entre la commande et la montée à bord, marche jusqu'au point de rencontre comprise. Le « 90 % sous » indique l'attente que 9 passagers sur 10 ne dépassent pas.</p>`},
+ 'm:detour':{t:'Temps en plus vs direct',h:`<p>Temps à bord moyen comparé au trajet direct en voiture au même moment. C'est le prix du partage : les crochets pour prendre et déposer les autres, et les arrêts.</p><p class="rep">Au-delà de 30 à 40 %, le service paraît lent.</p>`},
+ 'm:fill':{t:'Remplissage des places',h:`<p>Passagers-km transportés divisés par les places-km offertes, km à vide compris. À 50 % avec 8 places, un véhicule transporte en moyenne 4 personnes sur chaque km parcouru.</p><p class="rep">Repères : une voiture solo à 5 places ≈ 25 %. Un bus urbain tourne souvent entre 15 et 30 % sur la journée.</p>`},
+ 'm:punct':{t:'Ponctualité',h:`<p>Part des passagers arrivés au plus tard 5 minutes après l'heure annoncée à la réservation. Les retards viennent des passagers ajoutés ensuite sur le trajet (dans la limite du détour) et de la congestion qui évolue.</p>`},
+ 'm:occ':{t:'Passagers par véhicule-km',h:`<p>Nombre moyen de passagers à bord sur chaque km parcouru, km à vide compris. Une voiture particulière est autour de 1,2.</p>`},
+ 'm:empty':{t:'Km à vide',h:`<p>Part des km parcourus sans aucun passager : aller chercher le premier passager, repositionnement, trajets vers la recharge. Ce sont des km qui coûtent et polluent sans rien transporter.</p>`},
+ 'm:op':{t:'Coût exploitant par trajet',h:`<p>Coût total de la flotte (coûts fixes + coûts au km) divisé par le nombre de trajets réalisés. C'est le prix minimal du billet pour équilibrer l'exploitation, sans marge ni subvention.</p><p class="rep">Comparé à une voiture personnelle à 0,45 €/km tout compris (achat, assurance, carburant, entretien).</p>`},
+ 'm:total':{t:'Coût total par trajet',h:`<p>Coût exploitant + valeur du temps perdu par l'usager (attente et détour), au tarif réglé dans « Valeur du temps ». Permet de comparer un système moins cher mais plus lent à un système plus cher mais plus rapide.</p>`},
+ 'm:co2':{t:'CO₂ évité',h:`<p>Émissions si chaque passager transporté avait fait son trajet seul en voiture thermique, moins les émissions de l'électricité consommée par les taxibus.</p>`},
+ 'm:peak':{t:'Véhicules en pointe',h:`<p>Nombre moyen de taxibus en mouvement pendant l'heure la plus chargée, comparé au nombre de voitures qu'il faudrait sur la route au même moment si chacun roulait seul.</p>`},
+ 'm:walk':{t:'Marche',h:`<p>Part des passagers à qui le système a demandé de marcher jusqu'à un carrefour voisin, et distance moyenne marchée par ces passagers (départ + arrivée).</p>`},
+ 'o:goals':{t:'Objectifs',h:`<p>Cochez les critères à respecter et fixez un seuil. L'optimiseur cherche les combinaisons de leviers qui les respectent tous, puis classe celles qui y arrivent par coût exploitant par trajet.</p><p>Si aucune n'y arrive, il affiche la plus proche et la meilleure valeur atteinte pour chaque objectif : cela montre quels objectifs se contredisent.</p>`},
+ 'o:levers':{t:'Leviers',h:`<p>Cochez les paramètres que l'optimiseur a le droit de changer, et dans quelle plage. Exemple : pour garder des véhicules de 8 places, laissez « Places » décoché et réglez 8 à gauche.</p><p>La part modale est un levier particulier : on ne la décide pas, mais elle indique quel niveau de fréquentation il faudrait atteindre.</p>`},
+});
+function infoBtn(key,label){return`<button class="info" type="button" data-info="${key}" aria-label="À propos : ${label}" aria-expanded="false">i</button>`}
 function buildRail(){
-  const rail=$('#rail');let h='';
+  const rail=$('#rail');let h=`<div class="railtop"><b>Paramètres</b><button class="btn small" id="reset" type="button">Valeurs par défaut</button></div>`;
   PARAMS.forEach(g=>{h+=`<fieldset><legend><i></i>${g.g}</legend>`;
     g.items.forEach(p=>{
-      if(p.toggle)h+=`<label class="tgl" for="p-${p.id}">${p.label}<input type="checkbox" id="p-${p.id}" ${p.v?'checked':''}></label>`;
-      else h+=`<div class="prm"><label for="p-${p.id}">${p.label}</label><output id="o-${p.id}">${p.f(p.v)}</output><input type="range" id="p-${p.id}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.v}">${p.help?`<small>${p.help}</small>`:''}</div>`});
+      if(p.toggle)h+=`<div class="tgl"><div class="plabel"><label for="p-${p.id}">${p.label}</label>${infoBtn('p:'+p.id,p.label)}</div><input type="checkbox" id="p-${p.id}" ${p.v?'checked':''}></div>`;
+      else h+=`<div class="prm"><div class="plabel"><label for="p-${p.id}">${p.label}</label>${infoBtn('p:'+p.id,p.label)}</div><output id="o-${p.id}">${p.f(p.v)}</output><input type="range" id="p-${p.id}" min="${p.min}" max="${p.max}" step="${p.step}" value="${p.v}"></div>`});
     h+='</fieldset>'});
   h+='<div class="derived" id="derived"></div>';
   rail.innerHTML=h;
   PARAMS.forEach(g=>g.items.forEach(p=>{const el=$('#p-'+p.id);
     el.addEventListener('input',()=>{P[p.id]=p.toggle?el.checked:+el.value;if(!p.toggle)$('#o-'+p.id).textContent=p.f(P[p.id]);updateDerived();scheduleLiveReset()})}));
+  $('#reset').addEventListener('click',()=>{setParams(DEFAULTS);$('#reset').textContent='Rétabli ✓';setTimeout(()=>$('#reset').textContent='Valeurs par défaut',1500)});
+  rail.addEventListener('scroll',closePop,{passive:true});
   updateDerived();
 }
 function setParams(obj){for(const k in obj){P[k]=obj[k];const el=$('#p-'+k);if(!el)continue;const def=PARAMS.flatMap(g=>g.items).find(p=>p.id===k);
@@ -381,6 +485,17 @@ function updateDerived(){
   const daily=P.pop*P.trips*P.share/100,peak=daily*Math.max(...PROF_WD)*DAY_FACTOR[0];
   $('#derived').innerHTML=`<div>Demandes par jour de semaine <b>${nf(daily)}</b></div><div>Pointe (8 h) <b>${nf(peak)}/h</b> · <b>${nf(peak/AREA_KM2,0)}</b> /km²/h</div><div>Demandes de pointe par véhicule <b>${nf(peak/P.fleet,1)}/h</b></div>`;
 }
+/* popover */
+let popBtn=null;
+function closePop(){const p=$('#pop');if(!p||p.hidden)return;p.hidden=true;if(popBtn)popBtn.setAttribute('aria-expanded','false');popBtn=null}
+document.addEventListener('click',e=>{const b=e.target.closest('.info');const pop=$('#pop');
+  if(b){e.preventDefault();e.stopPropagation();if(popBtn===b){closePop();return}closePop();const it=INFO[b.dataset.info];if(!it)return;
+    $('#popc').innerHTML=`<h4>${it.t}</h4>${it.h}`;pop.hidden=false;popBtn=b;b.setAttribute('aria-expanded','true');
+    const r=b.getBoundingClientRect(),pw=pop.offsetWidth,ph=pop.offsetHeight;let left=r.left+window.scrollX-12;left=Math.max(window.scrollX+8,Math.min(left,window.scrollX+document.documentElement.clientWidth-pw-8));
+    let top=r.bottom+window.scrollY+8;if(r.bottom+ph+16>window.innerHeight&&r.top>ph+16)top=r.top+window.scrollY-ph-8;
+    pop.style.left=left+'px';pop.style.top=top+'px';return}
+  if(e.target.closest('.pop .x')||!e.target.closest('.pop'))closePop()});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closePop()});
 
 /* =================== Simulation core =================== */
 const DT=15,CHG=2;
@@ -391,7 +506,7 @@ function makeSim(Pin,seed,days){
   const daily=P.pop*P.trips*shareF;
   const V=[];
   for(let i=0;i<P.fleet;i++)V.push({id:i,cur:sampleCum(cMix,rnd()),nxt:-1,tDep:0,tArr:0,free:0,stops:[],load:0,batt:range*(0.6+0.4*rnd()),toCharge:false,depot:-1,rebal:-1,state:0,until:0,idle:true,idleSince:0,km:0});
-  const mkAcc=()=>({req:0,acc:0,rej:0,picked:0,sumWait:0,done:0,sumRide:0,sumDirect:0,vkm:0,vkmEmpty:0,pkm:0,directKm:0,st:[0,0,0,0],samp:0,moving:0,loadSum:0,directT:0});
+  const mkAcc=()=>({onTime:0,walkers:0,walkM:0,req:0,acc:0,rej:0,picked:0,sumWait:0,done:0,sumRide:0,sumDirect:0,vkm:0,vkmEmpty:0,pkm:0,directKm:0,st:[0,0,0,0],samp:0,moving:0,loadSum:0,directT:0});
   const hours=Array.from({length:days*24},mkAcc),dayS=Array.from({length:days},mkAcc);
   const tot=Object.assign(mkAcc(),{waitHist:new Float64Array(121),loadKm:new Float64Array(cap+1),maxLoad:0});
   const S={t:0,P,V,hours,dayS,tot,days,END,cong,runTo};
@@ -404,8 +519,12 @@ function makeSim(Pin,seed,days){
   function poisson(l){if(l>30)return Math.max(0,Math.round(l+Math.sqrt(l)*Math.sqrt(-2*Math.log(rnd()+1e-12))*Math.cos(2*Math.PI*rnd())));const L0=Math.exp(-l);let k=0,p=1;do{k++;p*=rnd()}while(p>L0);return k-1}
   const hIdx=t=>Math.min(days*24-1,Math.floor(t/3600)),dIdx=t=>Math.min(days-1,Math.floor(t/86400));
   const avail=v=>v.state!==CHG&&!v.toCharge&&v.batt>0.12*range&&v.stops.length<120;
+  const walkM=P.walk||0;
+  function getCands(o,lp,t,cg,lim){const cands=[];
+    for(const v of V){if(!avail(v))continue;const sN=v.nxt>=0?v.nxt:v.cur,sT=v.nxt>=0?v.tArr:Math.max(t,v.free);const lb=sT+D[sN*N+o]*cg;if(lb<=lp)cands.push([lb,v])}
+    if(cands.length>lim){cands.sort((a,b)=>a[0]-b[0]);cands.length=lim}return cands}
 
-  function evalInsert(v,r,t,cg,best){
+  function evalInsert(v,r,t,cg,best,pen){
     const St=v.stops,k=St.length,o=r.o,d=r.d;
     const sN=v.nxt>=0?v.nxt:v.cur,sT=v.nxt>=0?v.tArr:Math.max(t,v.free);
     let time=sT,node=sN,load=v.load;bLd[0]=load;
@@ -417,11 +536,12 @@ function makeSim(Pin,seed,days){
       if(bLd[i]+1>cap)continue;
       const tPO=D[pN*N+o]*cg,tPick=pT+tPO;
       if(tPick>r.lp)break;
+      if(tPick<r.pmin)continue;
       const wait=tPick-r.t;
       const tDrop=tPick+dw+Tod;
       if(tDrop<=r.ld&&tDrop-tPick<=r.mr){let det,ok=true;
         if(i<k){const nN=St[i].node;det=tPO+dw+Tod+dw+D[d*N+nN]*cg-D[pN*N+nN]*cg;ok=det<=bSl[i]}else det=tPO+dw+Tod+dw;
-        if(ok){const c=det+0.6*wait;if(c<best.c){best.c=c;best.v=v;best.i=i;best.j=i;best.tp=tPick}}}
+        if(ok){const c=det+0.6*wait+pen;if(c<best.c){best.c=c;best.v=v;best.i=i;best.j=i;best.tp=tPick;best.td=tDrop;best.rq=r}}}
       if(i<k){const nN=St[i].node;const detP=tPO+dw+D[o*N+nN]*cg-D[pN*N+nN]*cg;if(detP>bSl[i])continue;
         for(let j=i+1;j<=k;j++){
           if(bLd[j]+1>cap)break;
@@ -429,8 +549,8 @@ function makeSim(Pin,seed,days){
           if(tDr>r.ld||tDr-tPick>r.mr)break;
           let detD;
           if(j<k){const nn=St[j].node;detD=tqD+dw+D[d*N+nn]*cg-D[qN*N+nn]*cg;if(detP+detD>bSl[j])continue}else detD=tqD+dw;
-          const c=detP+detD+0.6*wait+0.3*Math.max(0,(tDr-tPick)-Tod);
-          if(c<best.c){best.c=c;best.v=v;best.i=i;best.j=j;best.tp=tPick}}}
+          const c=detP+detD+0.6*wait+0.3*Math.max(0,(tDr-tPick)-Tod)+pen;
+          if(c<best.c){best.c=c;best.v=v;best.i=i;best.j=j;best.tp=tPick;best.td=tDr;best.rq=r}}}
     }
   }
   function newRequest(t){
@@ -439,18 +559,18 @@ function makeSim(Pin,seed,days){
     let o,d,tries=0;do{o=sampleCum(co,rnd());d=sampleCum(cd,rnd());tries++}while((o===d||L[o*N+d]<900)&&tries<25);
     if(o===d||L[o*N+d]<900)return;
     const cg=cong(t),direct=D[o*N+d]*cg;
-    const mr=direct*(1+detour)+90;const r={o,d,t,direct,mr,km:L[o*N+d]/1000,lp:t+maxWait,ld:t+maxWait+mr,tPick:-1};
+    const mr=direct*(1+detour)+90;const r={o,d,t,direct,mr,km:L[o*N+d]/1000,lp:t+maxWait,ld:t+maxWait+mr,tPick:-1,pmin:0,wO:0,wD:0,eta:0};
     const hh=hours[hIdx(t)],dd=dayS[dIdx(t)];hh.req++;dd.req++;tot.req++;
-    // candidates by lower bound on pickup time
-    const cands=[];
-    for(const v of V){if(!avail(v))continue;const sN=v.nxt>=0?v.nxt:v.cur,sT=v.nxt>=0?v.tArr:Math.max(t,v.free);const lb=sT+D[sN*N+o]*cg;if(lb<=r.lp)cands.push([lb,v])}
-    if(cands.length>40){cands.sort((a,b)=>a[0]-b[0]);cands.length=40}
-    const best={c:Infinity,v:null,i:-1,j:-1};
-    for(const c of cands)evalInsert(c[1],r,t,cg,best);
+    const best={c:Infinity,v:null,i:-1,j:-1,tp:0,td:0,rq:null};
+    const run=(rq,pen,lim)=>{for(const c of getCands(rq.o,rq.lp,t,cg,lim))evalInsert(c[1],rq,t,cg,best,pen)};
+    run(r,0,40);
+    if(walkM>0){
+      for(const o2 of WALKN[o]){const wO=L[o*N+o2];if(wO>walkM||o2===d)continue;const tw=wO/WALK_SPEED;if(tw>=maxWait*0.9)continue;run({...r,o:o2,wO,pmin:t+tw-60},0.4*tw,8)}
+      for(const d2 of WALKN[d]){const wD=L[d2*N+d];if(wD>walkM||d2===o)continue;const tw=wD/WALK_SPEED;run({...r,d:d2,wD,ld:r.ld-tw,mr:r.mr-tw},0.4*tw,8)}}
     if(!best.v){hh.rej++;dd.rej++;tot.rej++;return}
     hh.acc++;dd.acc++;tot.acc++;
-    const v=best.v;r.v=v.id;r.ld=Math.min(r.ld,best.tp+r.mr+60);
-    v.stops.splice(best.j,0,{node:d,type:1,r});v.stops.splice(best.i,0,{node:o,type:0,r});
+    const v=best.v,rq=best.rq;rq.v=v.id;rq.ld=Math.min(rq.ld,best.tp+rq.mr+60);rq.eta=best.td;
+    v.stops.splice(best.j,0,{node:rq.d,type:1,r:rq});v.stops.splice(best.i,0,{node:rq.o,type:0,r:rq});
     if(v.nxt<0&&v.free<t)v.free=t;v.idle=false;v.rebal=-1;
   }
   function traverse(v){const k=v.cur*N+v.nxt,len=EL[k],km=len/1000;
@@ -459,8 +579,8 @@ function makeSim(Pin,seed,days){
     v.cur=v.nxt;v.nxt=-1}
   function serve(v,tn){const St=v.stops;
     while(St.length&&St[0].node===v.cur){const s=St.shift(),r=s.r,hh=hours[hIdx(r.t)],dd=dayS[dIdx(r.t)];
-      if(s.type===0){v.load++;r.tPick=tn;const w=tn-r.t;hh.picked++;hh.sumWait+=w;dd.picked++;dd.sumWait+=w;tot.picked++;tot.sumWait+=w;tot.waitHist[Math.min(120,Math.floor(w/30))]++}
-      else{v.load--;const ride=tn-r.tPick;hh.done++;hh.sumRide+=ride;hh.sumDirect+=r.direct;hh.directT+=r.direct;dd.done++;dd.sumRide+=ride;dd.sumDirect+=r.direct;dd.directKm+=r.km;
+      if(s.type===0){v.load++;r.tPick=tn;const w=tn-r.t;hh.picked++;hh.sumWait+=w;dd.picked++;dd.sumWait+=w;tot.picked++;tot.sumWait+=w;tot.waitHist[Math.min(120,Math.floor(w/30))]++;if(r.wO||r.wD){tot.walkers++;tot.walkM+=r.wO+r.wD}}
+      else{v.load--;const ride=tn-r.tPick;if(tn<=r.eta+300){hh.onTime++;dd.onTime++;tot.onTime++}hh.done++;hh.sumRide+=ride;hh.sumDirect+=r.direct;hh.directT+=r.direct;dd.done++;dd.sumRide+=ride;dd.sumDirect+=r.direct;dd.directKm+=r.km;
         tot.done++;tot.sumRide+=ride;tot.sumDirect+=r.direct;tot.directKm+=r.km}}
     if(v.load>tot.maxLoad)tot.maxLoad=v.load;v.free=tn+dw}
   function advance(v,t){
@@ -506,7 +626,7 @@ function makeSim(Pin,seed,days){
 }
 function summarize(S){
   const T=S.tot,P=S.P,days=S.days;
-  const cost=P.fleet*P.vehDay*days+T.vkm*P.kmCost;
+  const cost=P.fleet*P.vehDay*vehCostF(P.cap)*days+T.vkm*P.kmCost*kmCostF(P.cap);
   let cum=0,p90=0;const n=T.picked;for(let i=0;i<T.waitHist.length;i++){cum+=T.waitHist[i];if(cum>=0.9*n){p90=(i+1)*30;break}}
   const avgWait=T.picked?T.sumWait/T.picked:0,avgRide=T.done?T.sumRide/T.done:0,avgDirect=T.done?T.sumDirect/T.done:1;
   const co2Bus=T.vkm*BUS_KWH_KM*P.grid/1000,co2Car=T.directKm*CAR_CO2_KM;
@@ -519,7 +639,7 @@ function summarize(S){
   // worst hour service
   let wh=-1,wr=1;S.hours.forEach((h,i)=>{if(h.req>=20){const r=h.acc/h.req;if(r<wr){wr=r;wh=i}}});
   const opPerTrip=T.done?cost/T.done:0,timePerTrip=P.vot/3600*(avgWait+Math.max(0,avgRide-avgDirect));
-  return{req:T.req,acc:T.acc,rej:T.rej,done:T.done,service:T.req?T.acc/T.req:0,avgWait,p90,avgRide,avgDirect,detour:avgRide/avgDirect-1,
+  return{fill:T.vkm?T.pkm/T.vkm/P.cap:0,punct:T.done?T.onTime/T.done:0,walkShare:T.picked?T.walkers/T.picked:0,avgWalk:T.walkers?T.walkM/T.walkers:0,req:T.req,acc:T.acc,rej:T.rej,done:T.done,service:T.req?T.acc/T.req:0,avgWait,p90,avgRide,avgDirect,detour:avgRide/avgDirect-1,
     occ:T.vkm?T.pkm/T.vkm:0,emptyShare:T.vkm?T.vkmEmpty/T.vkm:0,vkm:T.vkm,pkm:T.pkm,directKm:T.directKm,cost,opPerTrip,timePerTrip,totalPerTrip:opPerTrip+timePerTrip,
     co2Bus,co2Car,co2Saved:co2Car-co2Bus,kmPerTrip:T.done?T.vkm/T.done:0,directKmPerTrip:T.done?T.directKm/T.done:0,
     peakHour:ph,carsEq,busMoving,chargePeak:pk?pkc/pk:0,stShare:stTot.map(v=>v/stSum),worstHour:wh,worstRate:wr,
@@ -584,7 +704,7 @@ function scheduleLiveReset(){clearTimeout(resetTimer);resetTimer=setTimeout(rese
 function updateLiveKpis(force){if(!live)return;const T=live.tot;
   const d=Math.floor(dispT/86400);$('#clock').textContent=DAYS[d%7]+' '+hhmm(dispT);$('#cong').textContent='trafic ×'+nf(live.cong(dispT),2);
   const occ=T.vkm?T.pkm/T.vkm:0;
-  $('#livekpi').innerHTML=`<dt>Demandes</dt><dd>${nf(T.req)}</dd><dt>Acceptées</dt><dd>${T.req?pct(T.acc/T.req):'–'}</dd><dt>Attente moyenne</dt><dd>${T.picked?mins(T.sumWait/T.picked):'–'}</dd><dt>Temps à bord / direct</dt><dd>${T.done?'×'+nf(T.sumRide/T.sumDirect,2):'–'}</dd><dt>Passagers par véhicule-km</dt><dd>${nf(occ,2)}</dd><dt>Km à vide</dt><dd>${T.vkm?pct(T.vkmEmpty/T.vkm,0):'–'}</dd>`;
+  $('#livekpi').innerHTML=`<dt>Demandes</dt><dd>${nf(T.req)}</dd><dt>Acceptées</dt><dd>${T.req?pct(T.acc/T.req):'–'}</dd><dt>Attente moyenne</dt><dd>${T.picked?mins(T.sumWait/T.picked):'–'}</dd><dt>Temps à bord / direct</dt><dd>${T.done?'×'+nf(T.sumRide/T.sumDirect,2):'–'}</dd><dt>Remplissage des places</dt><dd>${pct(occ/live.P.cap,0)}</dd><dt>Ponctualité</dt><dd>${T.done?pct(T.onTime/T.done):'–'}</dd><dt>Km à vide</dt><dd>${T.vkm?pct(T.vkmEmpty/T.vkm,0):'–'}</dd>`;
   const c=[0,0,0,0];let wait=0,onb=0;for(const v of live.V){let k;if(v.state===CHG||v.toCharge)k=3;else if(v.load>0)k=0;else if(v.stops.length||v.nxt>=0)k=1;else k=2;c[k]++;onb+=v.load;for(const s of v.stops)if(s.type===0)wait++}
   const n=live.V.length||1,cols=['var(--accent)','var(--accent-soft)','var(--muted)','var(--violet)'];
   $('#fleetbar').innerHTML=c.map((v,i)=>`<div style="width:${v/n*100}%;background:${cols[i]}"></div>`).join('');
@@ -610,7 +730,7 @@ new MutationObserver(themeChange).observe(document.documentElement,{attributes:t
 const charts=new Set();
 function niceMax(v){if(v<=0)return 1;const p=Math.pow(10,Math.floor(Math.log10(v)));for(const m of [1,1.2,1.5,2,2.5,3,4,5,6,8,10])if(m*p>=v)return m*p;return 10*p}
 function chart(el,cfg){el._cfg=cfg;charts.add(el);renderChart(el)}
-function rerenderCharts(){charts.forEach(el=>{if(document.body.contains(el)&&el.offsetParent)renderChart(el)})}
+function rerenderCharts(){charts.forEach(el=>{if(document.body.contains(el)&&el.offsetParent)renderChart(el)});if(typeof goalPts!=='undefined'&&goalPts.length)drawGoalScatter()}
 function renderChart(el){const cfg=el._cfg,Wd=Math.max(260,el.clientWidth||600),Hd=cfg.height||190,m={l:46,r:10,t:10,b:24},iw=Wd-m.l-m.r,ih=Hd-m.t-m.b,n=cfg.labels.length;
   let ymax=0;if(cfg.type==='line')cfg.series.forEach(s=>s.values.forEach(v=>{if(v>ymax)ymax=v}));else for(let i=0;i<n;i++){let s=0;cfg.series.forEach(se=>s+=se.values[i]||0);if(s>ymax)ymax=s}
   if(cfg.ref)ymax=Math.max(ymax,cfg.ref.v);ymax=cfg.yMax||niceMax(ymax*1.05);
@@ -663,25 +783,27 @@ function renderReport(sim,s,prev){const P=s.P,el=$('#report'),days=sim.days;char
   const ok=s.service>=0.95&&s.occ>=1.5,mid=s.service>=0.88;
   const vtxt=ok?'Le système tient':mid?'Le système tient de justesse':'Le système ne suit pas';
   const vcol=ok?'var(--good)':mid?'var(--warn)':'var(--bad)';
-  const dl=(k,better)=>{if(!prev)return'';const d=s[k]-prev[k];if(Math.abs(d)<1e-9)return'';const good=better==='up'?d>0:d<0;const f=k==='service'||k==='emptyShare'?nf(d*100,1)+' pt':k==='avgWait'?nf(d/60,1)+' min':k==='opPerTrip'||k==='totalPerTrip'?nf(d,2)+' €':nf(d,2);
+  const dl=(k,better)=>{if(!prev)return'';const d=s[k]-prev[k];if(Math.abs(d)<1e-9)return'';const good=better==='up'?d>0:d<0;const f=k==='service'||k==='emptyShare'||k==='fill'||k==='punct'?nf(d*100,1)+' pt':k==='avgWait'?nf(d/60,1)+' min':k==='opPerTrip'||k==='totalPerTrip'?nf(d,2)+' €':nf(d,2);
     return`<div class="delta ${good?'up':'down'}">${d>0?'+':''}${f} vs précédent</div>`};
   const tiles=[
-    ['Demandes acceptées',nf(s.service*100,1),'%',`${nf(s.acc)} / ${nf(s.req)}`,grade(s.service,.95,.88),dl('service','up')],
-    ['Attente moyenne',nf(s.avgWait/60,1),'min',`90 % sous ${nf(s.p90/60,1)} min`,grade(s.avgWait/60,P.wait*.45,P.wait*.7,false),dl('avgWait','down')],
-    ['Temps en plus vs direct',nf(s.detour*100,0),'%',`${mins(s.avgRide)} à bord vs ${mins(s.avgDirect)}`,grade(s.detour,.25,.45,false),dl('detour','down')],
-    ['Passagers par véhicule-km',nf(s.occ,2),'',`voiture ≈ 1,2 · max à bord ${s.maxLoad}`,grade(s.occ,2.2,1.4),dl('occ','up')],
-    ['Km à vide',nf(s.emptyShare*100,0),'%',`${nf(s.kmPerVehDay)} km / véhicule / jour`,grade(s.emptyShare,.25,.4,false),dl('emptyShare','down')],
-    ['Coût exploitant / trajet',nf(s.opPerTrip,2),'€',`total ${nf(s.cost)} € sur ${days} j`,grade(s.opPerTrip,s.carCostPerTrip,s.carCostPerTrip*1.6,false),dl('opPerTrip','down')],
-    ['Coût total / trajet',nf(s.totalPerTrip,2),'€',`dont temps usager ${nf(s.timePerTrip,2)} €`,'',dl('totalPerTrip','down')],
-    ['CO₂ évité',nf(s.co2Saved/1000,1),'t',`${pct(s.co2Car?s.co2Saved/s.co2Car:0,0)} vs tous en voiture`,s.co2Saved>0?'good':'bad',''],
-    ['Véhicules en pointe',nf(s.busMoving,0),'',`au lieu de ≈ ${nf(s.carsEq,0)} voitures`,s.busMoving<s.carsEq?'good':'warn',''],
+    ['Demandes acceptées',nf(s.service*100,1),'%',`${nf(s.acc)} / ${nf(s.req)}`,grade(s.service,.95,.88),dl('service','up'),'service'],
+    ['Attente moyenne',nf(s.avgWait/60,1),'min',`90 % sous ${nf(s.p90/60,1)} min`,grade(s.avgWait/60,P.wait*.45,P.wait*.7,false),dl('avgWait','down'),'wait'],
+    ['Ponctualité',nf(s.punct*100,1),'%','arrivés ≤ heure annoncée + 5 min',grade(s.punct,.95,.85),dl('punct','up'),'punct'],
+    ['Temps en plus vs direct',nf(s.detour*100,0),'%',`${mins(s.avgRide)} à bord vs ${mins(s.avgDirect)}`,grade(s.detour,.25,.45,false),dl('detour','down'),'detour'],
+    ['Remplissage des places',nf(s.fill*100,0),'%',`${nf(s.occ,2)} pass. / véh-km · max à bord ${s.maxLoad}/${P.cap}`,grade(s.fill,.35,.2),dl('fill','up'),'fill'],
+    ['Km à vide',nf(s.emptyShare*100,0),'%',`${nf(s.kmPerVehDay)} km / véhicule / jour`,grade(s.emptyShare,.25,.4,false),dl('emptyShare','down'),'empty'],
+    ['Coût exploitant / trajet',nf(s.opPerTrip,2),'€',`total ${nf(s.cost)} € sur ${days} j`,grade(s.opPerTrip,s.carCostPerTrip,s.carCostPerTrip*1.6,false),dl('opPerTrip','down'),'op'],
+    ['Coût total / trajet',nf(s.totalPerTrip,2),'€',`dont temps usager ${nf(s.timePerTrip,2)} €`,'',dl('totalPerTrip','down'),'total'],
+    ['CO₂ évité',nf(s.co2Saved/1000,1),'t',`${pct(s.co2Car?s.co2Saved/s.co2Car:0,0)} vs tous en voiture`,s.co2Saved>0?'good':'bad','','co2'],
+    ['Véhicules en pointe',nf(s.busMoving,0),'',`au lieu de ≈ ${nf(s.carsEq,0)} voitures`,s.busMoving<s.carsEq?'good':'warn','','peak'],
   ];
+  if(P.walk>0)tiles.push(['Passagers qui marchent',nf(s.walkShare*100,0),'%',`${nf(s.avgWalk)} m en moyenne`,'','','walk']);
   let h=`<div class="verdict"><span class="pill" style="background:${vcol}">${ok?'OK':mid?'Limite':'Saturé'}</span><div><h2>${vtxt}</h2><p>${days===1?'Lundi':'Semaine complète'} · ${nf(P.fleet)} taxibus de ${P.cap} places pour ${nf(s.req)} demandes. Chaque véhicule a transporté en moyenne ${nf(s.done/P.fleet/days,0)} passagers par jour, en parcourant ${nf(s.kmPerTrip,1)} km par trajet servi (le trajet direct moyen fait ${nf(s.directKmPerTrip,1)} km).</p></div></div>`;
-  h+=`<div class="tiles">${tiles.map(t=>`<div class="tile ${t[4]}"><div class="lbl">${t[0]}</div><div class="val">${t[1]}<small>${t[2]}</small></div><div class="sub">${t[3]}</div>${t[5]}</div>`).join('')}</div>`;
+  h+=`<div class="tiles">${tiles.map(t=>`<div class="tile ${t[4]}"><div class="lbl"><span>${t[0]}</span>${infoBtn('m:'+t[6],t[0])}</div><div class="val">${t[1]}<small>${t[2]}</small></div><div class="sub">${t[3]}</div>${t[5]}</div>`).join('')}</div>`;
   h+=`<h2 class="section-title">Diagnostic</h2><div class="diag"><ul>${diagnose(s).map(d=>`<li><span class="chip ${d[0]}">${d[1]}</span><span>${d[2]}</span></li>`).join('')}</ul></div>`;
   h+=`<h2 class="section-title">Heure par heure</h2><div class="charts" id="rcharts"></div>`;
-  if(days>1){h+=`<h2 class="section-title">Jour par jour</h2><div class="tablewrap"><table><thead><tr><th>Jour</th><th>Demandes</th><th>Acceptées</th><th>Attente moy.</th><th>Temps à bord / direct</th><th>Pass. / véh-km</th><th>Km parcourus</th><th>Coût / trajet</th></tr></thead><tbody>`+
-    sim.dayS.map((d,i)=>{const c=P.fleet*P.vehDay+d.vkm*P.kmCost;return`<tr><td>${DAYS_FULL[i%7]}</td><td>${nf(d.req)}</td><td>${d.req?pct(d.acc/d.req):'–'}</td><td>${d.picked?mins(d.sumWait/d.picked):'–'}</td><td>${d.done?'×'+nf(d.sumRide/d.sumDirect,2):'–'}</td><td>${d.vkm?nf(d.pkm/d.vkm,2):'–'}</td><td>${nf(d.vkm)}</td><td>${d.done?nf(c/d.done,2)+' €':'–'}</td></tr>`}).join('')+`</tbody></table></div>`}
+  if(days>1){h+=`<h2 class="section-title">Jour par jour</h2><div class="tablewrap"><table><thead><tr><th>Jour</th><th>Demandes</th><th>Acceptées</th><th>Attente moy.</th><th>Temps à bord / direct</th><th>Remplissage</th><th>Ponctualité</th><th>Km parcourus</th><th>Coût / trajet</th></tr></thead><tbody>`+
+    sim.dayS.map((d,i)=>{const c=dayCost(P,d.vkm);return`<tr><td>${DAYS_FULL[i%7]}</td><td>${nf(d.req)}</td><td>${d.req?pct(d.acc/d.req):'–'}</td><td>${d.picked?mins(d.sumWait/d.picked):'–'}</td><td>${d.done?'×'+nf(d.sumRide/d.sumDirect,2):'–'}</td><td>${d.vkm?pct(d.pkm/d.vkm/P.cap,0):'–'}</td><td>${d.done?pct(d.onTime/d.done,0):'–'}</td><td>${nf(d.vkm)}</td><td>${d.done?nf(c/d.done,2)+' €':'–'}</td></tr>`}).join('')+`</tbody></table></div>`}
   el.innerHTML=h;
   const H=sim.hours,lab=H.map((_,i)=>days>1?DAYS[Math.floor(i/24)%7]:String(i%24).padStart(2,'0')+'h'),tl=H.map((_,i)=>(days>1?DAYS[Math.floor(i/24)%7]+' ':'')+String(i%24).padStart(2,'0')+':00');
   const box=$('#rcharts');const xe=days>1?24:3;
@@ -762,6 +884,110 @@ function drawScatter(points,target){const el=document.querySelector('#oscat .cb'
   el.innerHTML=s+'</svg>'}
 $('#optgo').addEventListener('click',optimize);$('#optstop').addEventListener('click',()=>optAbort=true);
 
+/* =================== Goal solver =================== */
+$('#m-goal').addEventListener('click',()=>setMode('goal'));$('#m-cost').addEventListener('click',()=>setMode('cost'));
+function setMode(m){$('#m-goal').setAttribute('aria-pressed',m==='goal');$('#m-cost').setAttribute('aria-pressed',m==='cost');$('#mode-goal').hidden=m!=='goal';$('#mode-cost').hidden=m!=='cost';rerenderCharts();if(m==='goal'&&goalPts.length)drawGoalScatter()}
+const GOALS=[
+ {id:'fill',label:'Remplissage moyen des places',dir:1,v:70,unit:'%',get:s=>s.fill*100,on:true,mk:'m:fill'},
+ {id:'service',label:'Demandes acceptées',dir:1,v:95,unit:'%',get:s=>s.service*100,on:true,mk:'m:service'},
+ {id:'punct',label:'Ponctualité (≤ heure annoncée + 5 min)',dir:1,v:95,unit:'%',get:s=>s.punct*100,on:true,mk:'m:punct'},
+ {id:'wait',label:'Attente moyenne',dir:-1,v:6,unit:'min',get:s=>s.avgWait/60,on:false,mk:'m:wait'},
+ {id:'detour',label:'Temps en plus vs direct',dir:-1,v:40,unit:'%',get:s=>s.detour*100,on:false,mk:'m:detour'},
+ {id:'cost',label:'Coût exploitant par trajet',dir:-1,v:3,unit:'€',get:s=>s.opPerTrip,on:false,mk:'m:op'},
+];
+const LEVERS=[
+ {id:'fleet',label:'Nombre de taxibus',min:40,max:500,step:10,log:true,on:true},
+ {id:'cap',label:'Places par véhicule',min:4,max:16,step:1,on:false},
+ {id:'detour',label:'Détour max (%)',min:20,max:150,step:5,on:true},
+ {id:'wait',label:'Attente max (min)',min:5,max:20,step:1,on:false},
+ {id:'walk',label:'Marche max (m)',min:0,max:1000,step:500,on:false},
+ {id:'share',label:'Part modale (%)',min:2,max:25,step:1,on:true},
+];
+function buildGoalForm(){
+  $('#goals').innerHTML=GOALS.map(g=>`<div class="grow ${g.on?'':'off'}" id="gr-${g.id}"><input type="checkbox" id="gc-${g.id}" ${g.on?'checked':''} aria-label="Activer : ${g.label}"><label for="gv-${g.id}">${g.label} ${infoBtn(g.mk,g.label)}</label><span class="rng">${g.dir>0?'≥':'≤'} <input type="number" id="gv-${g.id}" value="${g.v}" step="any"> ${g.unit}</span></div>`).join('');
+  $('#levers').innerHTML=LEVERS.map(l=>`<div class="grow ${l.on?'':'off'}" id="lr-${l.id}"><input type="checkbox" id="lc-${l.id}" ${l.on?'checked':''} aria-label="Laisser varier : ${l.label}"><label for="lmin-${l.id}">${l.label}</label><span class="rng"><input type="number" id="lmin-${l.id}" value="${l.min}" step="${l.step}" aria-label="minimum"> à <input type="number" id="lmax-${l.id}" value="${l.max}" step="${l.step}" aria-label="maximum"></span></div>`).join('');
+  GOALS.forEach(g=>$('#gc-'+g.id).addEventListener('change',e=>$('#gr-'+g.id).classList.toggle('off',!e.target.checked)));
+  LEVERS.forEach(l=>$('#lc-'+l.id).addEventListener('change',e=>$('#lr-'+l.id).classList.toggle('off',!e.target.checked)));
+}
+async function evalDayAsync(params){const sim=makeSim(params,42,1);while(sim.t<86400){sim.runTo(sim.t+4*3600);await yieldUI()}return summarize(sim)}
+let goalAbort=false,goalPts=[],goalActive=[];
+async function solveGoals(){
+  goalAbort=false;$('#goalgo').disabled=true;$('#goalstop').disabled=false;
+  const goals=GOALS.filter(g=>$('#gc-'+g.id).checked).map(g=>({...g,v:+$('#gv-'+g.id).value}));
+  const levers=LEVERS.filter(l=>$('#lc-'+l.id).checked).map(l=>{let a=+$('#lmin-'+l.id).value,b=+$('#lmax-'+l.id).value;if(a>b)[a,b]=[b,a];return{...l,min:a,max:b}});
+  goalActive=goals;
+  if(!goals.length){$('#gstatus').textContent='Cochez au moins un objectif.';$('#goalgo').disabled=false;$('#goalstop').disabled=true;return}
+  const budget=+$('#g-budget').value,rnd=mulberry32(99),gauss=()=>Math.sqrt(-2*Math.log(rnd()+1e-12))*Math.cos(2*Math.PI*rnd());
+  const snap=(l,v)=>{v=Math.max(l.min,Math.min(l.max,v));return+(Math.round(v/l.step)*l.step).toFixed(3)};
+  const sample=()=>{const c={};levers.forEach(l=>c[l.id]=snap(l,l.log?Math.exp(Math.log(l.min)+rnd()*(Math.log(l.max)-Math.log(l.min))):l.min+rnd()*(l.max-l.min)));return c};
+  const perturb=(c,sc)=>{const n={...c};levers.forEach(l=>{if(rnd()<0.7){const span=l.log?n[l.id]*sc*1.5:(l.max-l.min)*sc;n[l.id]=snap(l,n[l.id]+gauss()*Math.max(span,l.step))}});return n};
+  const viol=s=>goals.reduce((a,g)=>{const v=g.get(s),den=Math.max(Math.abs(g.v),1);return a+Math.max(0,g.dir>0?(g.v-v)/den:(v-g.v)/den)},0);
+  const score=r=>r.viol>0?1000+r.viol*100:r.s.opPerTrip;
+  goalPts=[];const t0=performance.now();
+  $('#goalres').innerHTML=`<div class="best" id="gsum"><p>Recherche en cours…</p></div><div class="charts"><div class="chart" id="gscat"><h3 id="gscat-t"></h3><div class="clegend"><span><i style="background:var(--good)"></i>atteint tous les objectifs</span><span><i style="background:var(--muted)"></i>n'y arrive pas</span><span><i style="background:var(--ink);height:2px"></i>seuils</span></div><div class="cb"></div></div>
+    <div class="chart"><h3>Meilleures valeurs atteintes</h3><ul class="reach" id="greach"></ul></div></div><h2 class="section-title">Combinaisons testées, les plus proches du but d'abord</h2><div class="tablewrap"><table id="gtab"></table></div>`;
+  const seen=new Set();
+  for(let i=0;i<budget&&!goalAbort;i++){
+    let cfg;
+    if(i===0){cfg={};levers.forEach(l=>cfg[l.id]=snap(l,P[l.id]))}
+    else if(i<budget*0.5||goalPts.length<3)cfg=sample();
+    else{const top=goalPts.slice().sort((a,b)=>score(a)-score(b)).slice(0,3);cfg=perturb(top[Math.floor(rnd()*top.length)].cfg,0.18*(1-i/budget)+0.04)}
+    const key=JSON.stringify(cfg);if(seen.has(key)){cfg=perturb(cfg,0.1)}seen.add(JSON.stringify(cfg));
+    const params={...P,...cfg};
+    $('#gstatus').textContent=`Journée ${i+1}/${budget} · `+levers.map(l=>`${l.label.toLowerCase()} ${nf(cfg[l.id])}`).join(', ');
+    $('#gprog').style.width=(i/budget*100)+'%';
+    const s=await evalDayAsync(params);
+    const rec={cfg,s,viol:viol(s)};goalPts.push(rec);
+    renderGoalResults(levers,goals,score);
+  }
+  $('#gprog').style.width='100%';
+  $('#gstatus').textContent=`${goalAbort?'Arrêté':'Terminé'} : ${goalPts.length} journées simulées en ${nf((performance.now()-t0)/1000,0)} s.`;
+  $('#goalgo').disabled=false;$('#goalstop').disabled=true}
+function fmtGoal(g,v){return nf(v,g.unit==='€'||g.unit==='min'?1:0)+(g.unit==='%'?' %':' '+g.unit)}
+function renderGoalResults(levers,goals,score){
+  const pts=goalPts,feas=pts.filter(p=>p.viol===0).sort((a,b)=>a.s.opPerTrip-b.s.opPerTrip),sorted=pts.slice().sort((a,b)=>score(a)-score(b));
+  const best=feas[0]||sorted[0];
+  const cfgTxt=c=>levers.map(l=>`<span>${l.label} : ${nf(c[l.id])}</span>`).join('');
+  const others=`<span>${nf(P.pop)} hab.</span>`+(levers.some(l=>l.id==='cap')?'':`<span>${P.cap} places</span>`)+(levers.some(l=>l.id==='share')?'':`<span>part modale ${P.share} %</span>`);
+  const status=goals.map(g=>{const v=g.get(best.s),ok=g.dir>0?v>=g.v:v<=g.v;return`<span class="${ok?'ok':'ko'}">${ok?'✓':'✗'} ${g.label} ${fmtGoal(g,v)}</span>`}).join(' · ');
+  $('#gsum').innerHTML=feas.length?
+   `<div class="eyebrow">${feas.length} combinaison${feas.length>1?'s':''} sur ${pts.length} atteigne${feas.length>1?'nt':''} tous les objectifs</div><h2>La moins chère : ${nf(best.s.opPerTrip,2)} € par trajet</h2><div class="cfg">${cfgTxt(best.cfg)}${others}</div><p>${status}</p><div><button class="btn primary" id="gapply">Appliquer ces paramètres</button></div>`
+  :`<div class="eyebrow">Aucune combinaison testée n'atteint tous les objectifs (${pts.length} essais)</div><h2>La plus proche</h2><div class="cfg">${cfgTxt(best.cfg)}${others}</div><p>${status}</p><p>${conflictText(goals)}</p><div><button class="btn" id="gapply">Appliquer la plus proche</button></div>`;
+  $('#gapply').addEventListener('click',()=>{setParams(best.cfg);$('#gapply').textContent='Appliqué ✓'});
+  // reach list
+  $('#greach').innerHTML=goals.map(g=>{const b=pts.reduce((a,p)=>(g.dir>0?g.get(p.s)>g.get(a.s):g.get(p.s)<g.get(a.s))?p:a,pts[0]);const v=g.get(b.s),ok=g.dir>0?v>=g.v:v<=g.v;
+    const rest=goals.filter(x=>x!==g).map(x=>`${x.label.split(' (')[0].toLowerCase()} ${fmtGoal(x,x.get(b.s))}`).join(', ');
+    return`<li><span class="${ok?'ok':'ko'}">${g.label} : ${fmtGoal(g,v)}</span> <span class="note">(objectif ${g.dir>0?'≥':'≤'} ${fmtGoal(g,g.v)}) avec ${levers.map(l=>l.label.toLowerCase()+' '+nf(b.cfg[l.id])).join(', ')}${rest?` ; mais alors ${rest}`:''}.</span></li>`}).join('');
+  // table
+  $('#gtab').innerHTML=`<thead><tr>${levers.map(l=>`<th>${l.label}</th>`).join('')}${goals.map(g=>`<th>${g.label.split(' (')[0]}</th>`).join('')}<th>€ / trajet</th></tr></thead><tbody>`+
+    sorted.slice(0,15).map(p=>`<tr class="${p===best?'best':''}">${levers.map(l=>`<td>${nf(p.cfg[l.id])}</td>`).join('')}${goals.map(g=>{const v=g.get(p.s),ok=g.dir>0?v>=g.v:v<=g.v;return`<td class="${ok?'ok':'ko'}">${fmtGoal(g,v)}</td>`}).join('')}<td>${nf(p.s.opPerTrip,2)}</td></tr>`).join('')+'</tbody>';
+  drawGoalScatter()}
+function conflictText(goals){
+  const pts=goalPts;if(pts.length<4)return'';
+  const g=goals.map(x=>({x,miss:pts.filter(p=>x.dir>0?x.get(p.s)<x.v:x.get(p.s)>x.v).length}));
+  const never=g.filter(o=>o.miss===pts.length);
+  const ach=g.filter(o=>o.miss<pts.length);
+  let t='';
+  if(never.length)t+=`${never.map(o=>`« ${o.x.label} »`).join(' et ')} n'${never.length>1?'ont':'a'} jamais été atteint${never.length>1?'s':''}, même en sacrifiant le reste : il faut élargir les plages des leviers (souvent la part modale, donc la densité de demande) ou baisser ce seuil. `;
+  else if(ach.length>1)t+=`Chaque objectif est atteignable séparément, mais pas tous en même temps : ils se contredisent dans les plages choisies. `;
+  if(goals.some(x=>x.id==='fill')&&goals.some(x=>x.id==='service'||x.id==='punct'))t+=`Remplir les véhicules demande peu de véhicules pour beaucoup de demandes ; servir tout le monde à l'heure demande de la marge. Seule une demande plus dense (part modale, population) permet d'avoir les deux.`;
+  return t}
+function drawGoalScatter(){const el=document.querySelector('#gscat .cb');if(!el||!goalActive.length)return;
+  const gx=goalActive[0],gy=goalActive[1]||goalActive[0];$('#gscat-t').textContent=gy===gx?gx.label:`${gy.label.split(' (')[0]} selon ${gx.label.split(' (')[0].toLowerCase()}`;
+  const xs=goalPts.map(p=>gx.get(p.s)).concat(gx.v),ys=goalPts.map(p=>gy.get(p.s)).concat(gy.v);
+  const pad=(a,b)=>{const d=(b-a)||1;return[a-d*.08,b+d*.08]};let [x0,x1]=pad(Math.min(...xs),Math.max(...xs)),[y0,y1]=pad(Math.min(...ys),Math.max(...ys));if(gx.unit==='%'){x0=Math.max(0,x0);x1=Math.min(100,x1)}if(gy.unit==='%'){y0=Math.max(0,y0);y1=Math.min(100,y1)}
+  const Wd=Math.max(260,el.clientWidth||500),Hd=240,m={l:48,r:12,t:10,b:30},iw=Wd-m.l-m.r,ih=Hd-m.t-m.b;
+  const X=v=>m.l+(v-x0)/(x1-x0)*iw,Y=v=>m.t+ih-(v-y0)/(y1-y0)*ih;
+  let s=`<svg width="${Wd}" height="${Hd}" role="img" aria-label="Combinaisons testées">`;
+  for(let k=0;k<=4;k++){const v=y0+(y1-y0)*k/4,u=x0+(x1-x0)*k/4;s+=`<line x1="${m.l}" x2="${Wd-m.r}" y1="${Y(v)}" y2="${Y(v)}" stroke="var(--line)"/><text x="${m.l-6}" y="${Y(v)+3.5}" text-anchor="end">${nf(v,0)}</text><text x="${X(u)}" y="${Hd-12}" text-anchor="middle">${nf(u,gx.unit==='%'?0:1)}</text>`}
+  s+=`<text x="${Wd-m.r}" y="${Hd-1}" text-anchor="end">${gx.label.split(' (')[0]} (${gx.unit})</text>`;
+  s+=`<line x1="${X(gx.v)}" x2="${X(gx.v)}" y1="${m.t}" y2="${m.t+ih}" stroke="var(--ink)" stroke-dasharray="4 4"/>`;
+  if(gy!==gx)s+=`<line x1="${m.l}" x2="${Wd-m.r}" y1="${Y(gy.v)}" y2="${Y(gy.v)}" stroke="var(--ink)" stroke-dasharray="4 4"/>`;
+  goalPts.forEach(p=>s+=`<circle cx="${X(gx.get(p.s))}" cy="${Y(gy.get(p.s))}" r="4.5" fill="${p.viol===0?'var(--good)':'var(--muted)'}" fill-opacity="${p.viol===0?.95:.55}"><title>${Object.entries(p.cfg).map(([k,v])=>k+' '+v).join(', ')}</title></circle>`);
+  el.innerHTML=s+'</svg>'}
+$('#goalgo').addEventListener('click',solveGoals);$('#goalstop').addEventListener('click',()=>goalAbort=true);
+buildGoalForm();
+
 /* =================== Learn =================== */
 function renderLearn(){
   const daily=P.pop*P.trips*P.share/100,peak=daily*Math.max(...PROF_WD);
@@ -771,6 +997,7 @@ function renderLearn(){
    ['Le compromis attente, détour, nombre de véhicules','3',`<p>Trois leviers se compensent : accepter plus d'attente ou plus de détour permet de regrouper davantage de passagers, donc de servir la même demande avec moins de véhicules et moins de km. Mais un trajet rallongé de plus de 30 à 40 % paraît lent et fait fuir les usagers vers la voiture.</p><p>Une bonne pratique est de garantir une heure d'arrivée maximale au moment de la réservation plutôt qu'une durée de trajet : l'usager sait quand il arrive, l'algorithme garde de la marge pour regrouper.</p>`],
    ['6 à 10 places suffisent','4',`<p>Au-delà de 8 à 10 places, les sièges supplémentaires ne se remplissent qu'en pointe sur les axes les plus chargés. Un véhicule plus gros coûte plus cher, roule moins vite en ville et met plus de temps à chaque arrêt. L'optimiseur vous montre à partir de combien de places le gain sur la flotte devient négligeable.</p><p>Sur les axes très chargés, une ligne de bus ou de tram classique reste plus efficace : le taxibus devient alors un rabattement vers ces lignes fortes.</p>`],
    ['Repositionner les véhicules vides','5',`<p>Après une dépose, un véhicule vide qui attend sur place se retrouve souvent loin de la prochaine demande. Le rééquilibrage envoie les véhicules disponibles vers les quartiers où la demande va arriver (résidentiel le matin, centre et zones d'emploi le soir). Il ajoute des km à vide mais réduit l'attente et les refus. En vrai, il s'appuie sur une prévision de la demande : historique, météo, événements.</p>`],
+   ['Marcher un peu pour mieux partager','5 bis',`<p>Si le passager accepte de marcher jusqu'au carrefour voisin, le véhicule n'a plus besoin de faire un crochet dans sa rue. Il garde un itinéraire plus direct pour tous ceux qui sont déjà à bord, ce qui permet d'ajouter des passagers sans dépasser leur détour. C'est le principe des « arrêts virtuels » des services de transport à la demande.</p><p>Comparez dans le Bilan « porte à porte » et « 500 m max » : le remplissage et la ponctualité augmentent, en échange de quelques minutes de marche pour une partie des passagers.</p>`],
    ['Énergie et recharge','6',`<p>Un taxibus roule facilement 150 à 300 km par jour. Si les véhicules se rechargent quand leur batterie est vide, une partie de la flotte est immobilisée en pleine pointe. Planifier la recharge la nuit et en milieu de journée, et dimensionner autonomie et bornes en conséquence, revient à gagner des véhicules gratuitement.</p>`],
    ['La route reste partagée','7',`<p>Tant que les taxibus circulent dans le même trafic que les voitures, ils subissent la congestion : l'attente et les détours explosent en pointe. Dans le modèle, chaque point de part modale gagné retire un peu de voitures et allège la congestion. Des voies réservées, une priorité aux feux et des points d'arrêt hors chaussée changent fortement le résultat.</p><p>Attention à l'effet inverse : si le taxibus attire surtout des gens qui marchaient, pédalaient ou prenaient le métro, il ajoute des véhicules au lieu d'en retirer.</p>`],
    ['Ce que le modèle ne dit pas','8',`<p>L'acceptabilité d'un véhicule sans chauffeur partagé avec des inconnus (sécurité, propreté, supervision à distance), l'accessibilité pour les personnes à mobilité réduite, le prix payé par l'usager, et la réglementation. Ce sont souvent eux qui décident du succès, plus que l'algorithme.</p>`],
@@ -779,7 +1006,7 @@ function renderLearn(){
   h+=`<article class="wide"><h3>Ordre de grandeur pour dimensionner</h3><p>Une estimation rapide de la flotte nécessaire en pointe :</p><div class="formula">flotte ≈ demandes de pointe par heure × (approche + trajet × (1 + détour)) ÷ 3600 ÷ passagers moyens à bord</div>
   <p style="margin-top:8px">Exemple avec vos réglages : ${nf(peak)} demandes/h × (4 min + 10 min × 1,3) ≈ ${nf(peak*(4+13)/60)} heures-passager à bord pour une heure de pointe, à diviser par le nombre moyen de passagers à bord (2 à 4 selon la densité). Soit environ <b>${nf(peak*17/60/3.5)} à ${nf(peak*17/60/2)}</b> véhicules en circulation, plus une marge pour la recharge. La simulation affine ce chiffre parce qu'elle tient compte de la géographie, du trafic et des refus.</p></article>`;
   h+=`<article class="wide"><h3>Ce qu'on sait déjà sur le sujet</h3><p>Une étude du MIT (Alonso-Mora et al., PNAS, 2017) a rejoué les courses de taxi de Manhattan : environ 2 000 véhicules de 10 places, ou 3 000 de 4 places, auraient pu servir 98 % des trajets assurés par les quelque 13 000 taxis de la ville, avec une attente moyenne d'environ 3 minutes. Le Forum international des transports (OCDE) est arrivé à des conclusions du même ordre pour Lisbonne en combinant taxis partagés, minibus à la demande et métro. Les services de minibus à la demande déjà en place (avec chauffeur) montrent en revanche que hors zones denses, la mutualisation reste faible et le coût par trajet élevé.</p></article>`;
-  h+=`<article class="wide"><h3>Hypothèses du modèle</h3><p class="note">Ville en grille de 16 × 16 carrefours espacés de 500 m, avenues à 50 km/h, rues à 30 km/h, 8 s de perte par carrefour. Population, emplois et commerces répartis autour d'un centre et de cinq pôles (gare, université, hôpital, centre commercial, zone d'activités). Demande horaire typique d'une semaine (pointes 8 h et 18 h, week-end plus plat), motifs domicile-travail le matin et le soir. Les demandes arrivent en temps réel : chacune est insérée dans l'itinéraire du véhicule qui minimise le temps ajouté, sous contraintes de capacité, d'attente et de détour de tous les passagers déjà affectés ; sinon elle est refusée. Prise en charge aux carrefours, sans marche ni annulation. Congestion uniforme sur la ville. Recharge dans 4 dépôts sans limite de bornes. Voiture de référence : ${CAR_CO2_KM*1000} g CO₂/km et ${nf(CAR_COST_KM,2)} €/km ; taxibus électrique : ${BUS_KWH_KM} kWh/km.</p></article>`;
+  h+=`<article class="wide"><h3>Hypothèses du modèle</h3><p class="note">Ville en grille de 16 × 16 carrefours espacés de 500 m, avenues à 50 km/h, rues à 30 km/h, 8 s de perte par carrefour. Population, emplois et commerces répartis autour d'un centre et de cinq pôles (gare, université, hôpital, centre commercial, zone d'activités). Demande horaire typique d'une semaine (pointes 8 h et 18 h, week-end plus plat), motifs domicile-travail le matin et le soir. Les demandes arrivent en temps réel : chacune est insérée dans l'itinéraire du véhicule qui minimise le temps ajouté, sous contraintes de capacité, d'attente et de détour de tous les passagers déjà affectés ; sinon elle est refusée. Prise en charge aux carrefours, sans marche ni annulation. Marche possible jusqu'à un carrefour voisin à 1,3 m/s si l'option est activée. Congestion uniforme sur la ville. Coûts proportionnels à la taille des véhicules (référence 8 places). Recharge dans 4 dépôts sans limite de bornes. Voiture de référence : ${CAR_CO2_KM*1000} g CO₂/km et ${nf(CAR_COST_KM,2)} €/km ; taxibus électrique : ${BUS_KWH_KM} kWh/km.</p></article>`;
   $('#learn').innerHTML=h}
 document.querySelector('[data-tab=learn]').addEventListener('click',renderLearn);
 
