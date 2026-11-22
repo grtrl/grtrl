@@ -185,6 +185,7 @@ div.best{background:var(--surface);border:2px solid var(--accent);border-radius:
 .hdr-r{display:grid;gap:10px;min-width:0}
 .cityrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.cityrow .seg{margin:0}
 /* phone app */
+@media (max-width:920px){.rail{order:2}body.appmode .rail{display:none}body.appmode header.top p{display:none}}
 .live.wide{grid-template-columns:1fr}.live.wide .side{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));align-items:start}
 .appwrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px;align-items:start}
 @media (max-width:860px){.appwrap{grid-template-columns:1fr}}
@@ -780,6 +781,7 @@ let curTab='live';
 document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
   curTab=b.dataset.tab;document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
   ['live','report','opt','app','learn'].forEach(t=>$('#tab-'+t).hidden=t!==curTab);
+  document.body.classList.toggle('appmode',curTab==='app');setHash();
   if(curTab==='live')resizeMap();if(curTab==='app'){app.layerKey='';renderSheet()}if(curTab==='report'||curTab==='opt')rerenderCharts()}));
 
 /* =================== Live view =================== */
@@ -1188,7 +1190,7 @@ async function selectCity(id){if(cityBusy||(CITY&&CITY.id===id))return;cityBusy=
     lf.min=Math.max(10,Math.round(P.fleet*0.4/st)*st);lf.max=Math.round(P.fleet*2/st)*st;lf.step=st;ls.min=Math.max(1,Math.round(P.share/2));ls.max=c.id==='paris'?6:25;ls.step=c.id==='paris'?0.5:1;buildGoalForm();
     document.querySelector('.live').classList.toggle('wide',c.id==='paris');
     resizeMap();resetLive();renderLearn();appReset();$('#citymsg').textContent='';
-    try{history.replaceState(null,'',id==='paris'?'#paris':location.pathname+location.search)}catch(e){}
+    setHash();
   }catch(e){$('#citymsg').textContent='Impossible de charger les données de Paris.';console.error(e)}
   cityBusy=false}
 document.querySelectorAll('#citysw button').forEach(b=>b.addEventListener('click',()=>selectCity(b.dataset.city)));
@@ -1306,7 +1308,8 @@ document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',a
   if(target<=dispT){resetLive();}if(target>dispT){live.runTo(target);dispT=live.t}appReset();$('#jumpmsg').textContent='';}));
 
 /* =================== Boot =================== */
-async function boot(){await selectCity(location.hash==='#paris'?'paris':'bellerive');requestAnimationFrame(frame)}
+function setHash(){if(!CITY)return;const h=(CITY.id==='paris'?'paris':'')+(curTab==='app'?(CITY.id==='paris'?'-app':'app'):'');try{history.replaceState(null,'',h?'#'+h:location.pathname+location.search)}catch(e){}}
+async function boot(){const h=location.hash;await selectCity(h.startsWith('#paris')?'paris':'bellerive');if(/app$/.test(h))$('#t-app').click();requestAnimationFrame(frame)}
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(boot);else boot();
 window.__taxibus={makeSim,summarize,P,evalDay};
 </script>
