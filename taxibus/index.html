@@ -1,4 +1,4 @@
-<title>Taxibus Bellerive</title>
+<title>Taxibus</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -181,6 +181,53 @@ div.best{background:var(--surface);border:2px solid var(--accent);border-radius:
 .ok{color:var(--good);font-weight:600}.ko{color:var(--bad);font-weight:600}
 .reach{display:grid;gap:6px;margin:0;padding:0}
 .reach li{list-style:none;font-size:14px}
+
+.hdr-r{display:grid;gap:10px;min-width:0}
+.cityrow{display:flex;align-items:center;gap:10px;flex-wrap:wrap}.cityrow .seg{margin:0}
+/* phone app */
+.live.wide{grid-template-columns:1fr}.live.wide .side{grid-template-columns:repeat(auto-fit,minmax(250px,1fr));align-items:start}
+.appwrap{display:grid;grid-template-columns:auto minmax(0,1fr);gap:24px;align-items:start}
+@media (max-width:860px){.appwrap{grid-template-columns:1fr}}
+.phone{width:380px;max-width:100%;height:780px;border-radius:46px;background:var(--ink);padding:11px;box-shadow:0 20px 50px rgba(10,25,35,.25);justify-self:center}
+.screen{height:100%;border-radius:36px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;position:relative}
+.ph-status{display:flex;justify-content:space-between;align-items:center;padding:12px 24px 4px;font:600 13px var(--f-body)}
+.ph-status span{font-size:11.5px;color:var(--muted)}
+.ph-head{display:flex;justify-content:space-between;align-items:baseline;padding:2px 18px 8px}
+.ph-logo{font:700 22px var(--f-display);color:var(--accent)}.ph-city{font-size:12px;color:var(--muted)}
+.ph-map{flex:1 1 42%;min-height:200px;position:relative}
+.ph-map canvas{position:absolute;inset:0;width:100%;height:100%;cursor:crosshair;touch-action:manipulation}
+.ph-sheet{flex:0 1 auto;max-height:58%;overflow:auto;background:var(--surface);border-radius:20px 20px 0 0;margin-top:-14px;position:relative;padding:16px 16px 20px;box-shadow:0 -6px 20px rgba(10,25,35,.12);display:grid;gap:10px;align-content:start}
+.sh-title{font:700 22px var(--f-display)}
+.sh-p{margin:0;color:var(--muted);font-size:14px}.sh-sub{font-weight:600;font-size:13px;color:var(--muted)}
+.fld{display:flex;align-items:center;gap:10px;background:var(--surface-2);border-radius:10px;padding:4px 10px}
+.fld input{flex:1;min-width:0;border:0;background:transparent;font:15px var(--f-body);color:var(--ink);padding:9px 0;outline:none}
+.fld:focus-within{outline:2px solid var(--accent)}
+.pin{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font:700 11px var(--f-body);color:var(--surface);flex:0 0 22px}
+.pin.a{background:var(--amber)}.pin.b{background:var(--ink)}
+.sugg{list-style:none;margin:0;padding:0;display:grid}
+.sugg button{width:100%;text-align:left;background:none;border:0;border-bottom:1px solid var(--line);padding:9px 4px;font:14px var(--f-body);color:var(--ink);cursor:pointer;display:flex;gap:10px}
+.sugg button:hover{background:var(--surface-2)}
+.hint{margin:0;font-size:12.5px;color:var(--muted)}
+.btn.wide{width:100%;justify-content:center;padding:12px}
+.sh-row{display:flex;gap:8px}
+.offer{border:2px solid var(--accent);border-radius:14px;padding:12px;display:grid;gap:10px}
+.o-top{display:flex;justify-content:space-between;align-items:flex-start}.o-kind{font-size:12.5px;color:var(--muted)}.o-plate{font:700 18px var(--f-mono)}
+.o-price{font:700 26px var(--f-display)}
+.o-times{display:grid;grid-template-columns:1fr 1fr;gap:8px}.o-times div{background:var(--surface-2);border-radius:10px;padding:8px 10px;display:grid}
+.o-times b{font:700 22px var(--f-display)}.o-times span{font-size:12px;color:var(--muted)}
+.o-facts{margin:0;padding-left:18px;font-size:13px;display:grid;gap:3px}
+.track{display:grid;gap:6px}.t-big{font:700 26px var(--f-display);color:var(--accent)}.t-sub{font:13px var(--f-mono);color:var(--muted)}
+.t-line{display:flex;justify-content:space-between;gap:10px;font-size:14px;border-top:1px solid var(--line);padding-top:6px}.t-line span{color:var(--muted)}.t-line b{text-align:right}
+.late{color:var(--bad);font-style:normal}
+.bar{height:8px;border-radius:4px;background:var(--surface-2);overflow:hidden}.bar div{height:100%;background:var(--accent);transition:width .4s}
+.nexts,.evts{margin:0;padding:0;list-style:none;display:grid;gap:4px;font-size:13px}
+.nexts li::before{content:"• ";color:var(--amber)}
+.evts li{color:var(--muted)}.evts li span{font-family:var(--f-mono);margin-right:6px;color:var(--ink)}
+.summary{display:grid;grid-template-columns:1fr 1fr;gap:8px}.summary div{background:var(--surface-2);border-radius:10px;padding:10px;display:grid}
+.summary b{font:700 22px var(--f-display)}.summary span{font-size:12px;color:var(--muted)}
+.stars{display:flex;gap:6px;justify-content:center}.stars button{background:none;border:0;font-size:30px;color:var(--line);cursor:pointer}.stars button.on{color:var(--amber)}
+.appside{display:grid;gap:12px;min-width:0}.jumps{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+@media (max-width:520px){.phone{width:100%;height:calc(100svh - 90px);min-height:600px;border-radius:0;padding:0;box-shadow:none;background:none}.screen{border-radius:12px;border:1px solid var(--line)}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -190,7 +237,8 @@ div.best{background:var(--surface);border:2px solid var(--accent);border-radius:
     <div class="sign" aria-hidden="true"><svg viewBox="0 0 34 34" fill="none"><rect x="5" y="6" width="24" height="19" rx="4" fill="#fff"/><rect x="8" y="9" width="18" height="7" rx="1.5" fill="#0B7A6F"/><circle cx="11" cy="25" r="3" fill="#fff" stroke="#0B7A6F" stroke-width="2"/><circle cx="23" cy="25" r="3" fill="#fff" stroke="#0B7A6F" stroke-width="2"/><rect x="15" y="2" width="4" height="4" rx="1" fill="#fff"/></svg></div>
     <div><div class="eyebrow">Simulation · transport autonome à la demande</div><h1>Taxibus</h1></div>
   </div>
-  <p>Des minibus autonomes qu'on commande comme un taxi, mais qui prennent et déposent d'autres passagers en chemin. Le modèle fait tourner le système dans <b>Bellerive</b>, une ville fictive de 7,5 × 7,5 km coupée par une rivière à quatre ponts, avec ses heures de pointe, sa congestion et la recharge des véhicules. Réglez les paramètres à gauche, regardez la ville vivre, puis lancez un bilan sur 1 ou 7 jours ou laissez l'optimiseur chercher la meilleure configuration.</p>
+  <div class="hdr-r"><p>Des minibus autonomes qu'on commande comme un taxi, mais qui prennent et déposent d'autres passagers en chemin. Le modèle fait tourner le système à <b id="cityname">Bellerive</b> : <span id="citydesc">une ville fictive</span>. Réglez les paramètres à gauche, regardez la ville vivre, réservez un trajet depuis l'application, puis lancez un bilan ou laissez l'optimiseur chercher la meilleure configuration.</p>
+  <div class="cityrow"><span class="eyebrow">Ville</span><div class="seg" id="citysw" role="group" aria-label="Ville simulée"><button data-city="bellerive" aria-pressed="true">Bellerive (fictive)</button><button data-city="paris" aria-pressed="false">Paris</button></div><span class="status" id="citymsg"></span></div></div>
 </header>
 
 <div class="app">
@@ -201,6 +249,7 @@ div.best{background:var(--surface);border:2px solid var(--accent);border-radius:
       <button role="tab" id="t-live" aria-selected="true" data-tab="live">Simulation en direct</button>
       <button role="tab" id="t-report" aria-selected="false" data-tab="report">Bilan 1 j / 7 j</button>
       <button role="tab" id="t-opt" aria-selected="false" data-tab="opt">Optimiseur</button>
+      <button role="tab" id="t-app" aria-selected="false" data-tab="app">Application</button>
       <button role="tab" id="t-learn" aria-selected="false" data-tab="learn">Ce qui compte</button>
     </div>
 
@@ -219,7 +268,7 @@ div.best{background:var(--surface);border:2px solid var(--accent);border-radius:
             </select>
             <button class="btn" id="restart">Recommencer</button>
           </div>
-          <canvas id="map" aria-label="Carte de Bellerive avec les taxibus en mouvement"></canvas>
+          <canvas id="map" aria-label="Carte de la ville avec les taxibus en mouvement"></canvas>
           <div class="legend">
             <span><i class="dot" style="background:var(--accent-soft)"></i>1/3 plein</span>
             <span><i class="dot" style="background:var(--accent)"></i>2/3</span>
@@ -306,6 +355,25 @@ div.best{background:var(--surface);border:2px solid var(--accent);border-radius:
     <div class="pop" id="pop" hidden role="dialog" aria-live="polite"><button class="x" type="button" aria-label="Fermer">×</button><div id="popc"></div></div>
 
     <!-- LEARN -->
+    <section id="tab-app" role="tabpanel" hidden>
+      <div class="appwrap">
+        <div class="phone"><div class="screen">
+          <div class="ph-status"><b id="ph-time">08:00</b><span id="ph-day">Lundi</span><span class="ph-net">5G ▮▮▮</span></div>
+          <div class="ph-head"><span class="ph-logo">Taxibus</span><span class="ph-city" id="ph-city"></span></div>
+          <div class="ph-map"><canvas id="phmap" aria-label="Carte de l'application"></canvas></div>
+          <div class="ph-sheet" id="ph-sheet"></div>
+        </div></div>
+        <div class="appside">
+          <div class="card"><h3>Vous êtes l'usager</h3><p class="note" style="margin:0">Choisissez une destination et réservez. Votre demande passe par le même algorithme que les milliers de passagers simulés : un véhicule qui roule déjà est dérouté pour vous prendre, d'autres passagers peuvent monter en route, et l'heure d'arrivée peut glisser. Ouvrez cette page sur votre téléphone pour l'utiliser comme une vraie application.</p></div>
+          <div class="card"><h3>Horloge</h3>
+            <label class="note" for="app-speed">Vitesse du temps</label>
+            <select id="app-speed" style="width:100%;margin:4px 0 10px"><option value="1">Temps réel</option><option value="10">×10</option><option value="30" selected>×30 (1 s = 30 s)</option><option value="90">×90</option></select>
+            <div class="note">Aller à</div><div class="jumps"><button class="btn small" data-jump="8">8 h · pointe</button><button class="btn small" data-jump="12.5">12 h 30</button><button class="btn small" data-jump="18">18 h · pointe</button><button class="btn small" data-jump="22">22 h</button></div><div class="status" id="jumpmsg"></div></div>
+          <div class="card"><h3>En ce moment dans la ville</h3><dl class="kv" id="appkpi"></dl></div>
+        </div>
+      </div>
+    </section>
+
     <section id="tab-learn" role="tabpanel" hidden>
       <div class="learn" id="learn"></div>
     </section>
@@ -325,46 +393,9 @@ const DAYS=['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 const DAYS_FULL=['Lundi','Mardi','Mercredi','Jeudi','Vendredi','Samedi','Dimanche'];
 const hhmm=t=>{const s=((t%86400)+86400)%86400;const h=Math.floor(s/3600),m=Math.floor(s%3600/60);return String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')};
 
-/* =================== City =================== */
-const W=16,H=16,N=W*H,SP=500;
-const AREA_KM2=((W-1)*SP/1000)*((H-1)*SP/1000);
-const ART_ROWS=[2,7,13],ART_COLS=[3,8,12],BRIDGES=[3,6,8,12],RIVER_Y=10;
-const CBD={x:8.4,y:5.6};
-const HUBS=[
-  {name:'Gare centrale',x:8,y:9,job:2.2,oth:1.6},
-  {name:'Université',x:3,y:3,job:2.0,oth:1.3,pop:0.6},
-  {name:'Hôpital',x:13,y:5,job:2.0,oth:0.6},
-  {name:'Centre commercial',x:11,y:13,job:1.2,oth:4.0},
-  {name:"Zone d'activités",x:2,y:14,job:3.0,oth:0.3,za:true},
-];
-const DEPOTS=[{x:1,y:7},{x:14,y:8},{x:5,y:15},{x:13,y:11}].map(d=>d.y*W+d.x);
-const ET=new Float32Array(N*N),EL=new Float32Array(N*N);
-const EDGES=[];
-function addEdge(a,b,art){const len=SP,sp=art?13.9:8.33,t=len/sp+8;ET[a*N+b]=ET[b*N+a]=t;EL[a*N+b]=EL[b*N+a]=len;EDGES.push([a,b,art])}
-for(let y=0;y<H;y++)for(let x=0;x<W;x++){const id=y*W+x;
-  if(x<W-1)addEdge(id,id+1,ART_ROWS.includes(y));
-  if(y<H-1){if(y===RIVER_Y&&!BRIDGES.includes(x))continue;addEdge(id,id+W,ART_COLS.includes(x))}}
-const D=new Float32Array(N*N).fill(Infinity),L=new Float32Array(N*N),NX=new Int16Array(N*N).fill(-1);
-for(let i=0;i<N;i++){D[i*N+i]=0;NX[i*N+i]=i}
-for(const [a,b] of EDGES){D[a*N+b]=D[b*N+a]=ET[a*N+b];L[a*N+b]=L[b*N+a]=SP;NX[a*N+b]=b;NX[b*N+a]=a}
-for(let k=0;k<N;k++)for(let i=0;i<N;i++){const dik=D[i*N+k];if(dik===Infinity)continue;const lik=L[i*N+k],nik=NX[i*N+k];
-  for(let j=0;j<N;j++){const nd=dik+D[k*N+j];if(nd<D[i*N+j]){D[i*N+j]=nd;L[i*N+j]=lik+L[k*N+j];NX[i*N+j]=nik}}}
-const WALKN=Array.from({length:N},(_,i)=>{const a=[];for(let j=0;j<N;j++)if(j!==i&&L[i*N+j]<=1000)a.push(j);return a});
-const NEAR_DEP=new Int16Array(N);
-for(let i=0;i<N;i++){let b=DEPOTS[0];for(const d of DEPOTS)if(D[i*N+d]<D[i*N+b])b=d;NEAR_DEP[i]=b}
-// land use weights
-const popW=new Float64Array(N),jobW=new Float64Array(N),othW=new Float64Array(N);
-(()=>{const r=mulberry32(7);
-for(let y=0;y<H;y++)for(let x=0;x<W;x++){const i=y*W+x,d=Math.hypot(x-CBD.x,y-CBD.y);
-  let pop=0.3+1.3*Math.exp(-((d-4.5)**2)/7);if(d<2)pop*=0.45;if(y>RIVER_Y)pop+=0.35;if(x<=0||x>=15||y<=0||y>=15)pop*=0.7;
-  let job=0.08+5*Math.exp(-d*d/4.5),oth=0.25*pop+2.2*Math.exp(-d*d/6);
-  for(const h of HUBS){const g=Math.exp(-((x-h.x)**2+(y-h.y)**2)/1.2);job+=h.job*g;oth+=h.oth*g;pop+=(h.pop||0)*g;if(h.za)pop*=(1-0.7*g)}
-  const n=0.8+0.4*r();popW[i]=pop*n;jobW[i]=job*(0.85+0.3*r());othW[i]=oth*(0.85+0.3*r())}})();
+/* =================== Cities =================== */
 function normCum(w){const s=w.reduce((a,b)=>a+b,0);const c=new Float64Array(w.length);let acc=0;for(let i=0;i<w.length;i++){acc+=w[i]/s;c[i]=acc}c[w.length-1]=1;return c}
 const norm=w=>{const s=w.reduce((a,b)=>a+b,0);return w.map(v=>v/s)};
-const popN=norm(Array.from(popW)),jobN=norm(Array.from(jobW)),othN=norm(Array.from(othW));
-const mixN=popN.map((v,i)=>0.5*v+0.5*othN[i]);
-const cPop=normCum(popN),cJob=normCum(jobN),cOth=normCum(othN),cMix=normCum(mixN);
 function sampleCum(c,u){let lo=0,hi=c.length-1;while(lo<hi){const m=(lo+hi)>>1;if(c[m]<u)lo=m+1;else hi=m}return lo}
 // time profiles
 const PROF_WD=norm([0.5,0.3,0.2,0.2,0.4,1.2,3.5,7.5,8,5,4.5,5,5.5,5,5,6,7.5,8.5,7,5,3.5,2.8,2,1.2]);
@@ -378,19 +409,86 @@ function purposeMix(h,we){ // [domicile→travail, travail→domicile, autres]
   if(h>=16&&h<20)return[0.06,0.55,0.39];
   if(h>=11&&h<14)return[0.12,0.12,0.76];
   return[0.15,0.2,0.65]}
-// rebalancing blocks (4x4 nodes)
-const blockOf=new Int8Array(N),blockCenter=new Int16Array(16);
-for(let i=0;i<N;i++){const x=i%W,y=(i/W)|0;blockOf[i]=((y>>2)<<2)|(x>>2)}
-for(let b=0;b<16;b++){let best=-1,bw=-1;for(let i=0;i<N;i++)if(blockOf[i]===b){const w=popN[i]+jobN[i]+othN[i];if(w>bw){bw=w;best=i}}blockCenter[b]=best}
-const BLOCKW=[0,1].map(we=>Array.from({length:24},(_,h)=>{const m=purposeMix(h,we);const w=new Float64Array(16);
-  for(let i=0;i<N;i++)w[blockOf[i]]+=m[0]*popN[i]+m[1]*jobN[i]+m[2]*mixN[i];const s=w.reduce((a,b)=>a+b,0);return w.map(v=>v/s)}));
+
+/* Bellerive: fictional 16 x 16 grid city */
+function buildBellerive(){
+  const W=16,H=16,SP=500,N=W*H,ART_ROWS=[2,7,13],ART_COLS=[3,8,12],BRIDGES=[3,6,8,12],RIVER_Y=10,CBD={x:8.4,y:5.6};
+  const HUBS=[{name:'Gare centrale',x:8,y:9,job:2.2,oth:1.6},{name:'Université',x:3,y:3,job:2.0,oth:1.3,pop:0.6},{name:'Hôpital',x:13,y:5,job:2.0,oth:0.6},{name:'Centre commercial',x:11,y:13,job:1.2,oth:4.0},{name:"Zone d'activités",x:2,y:14,job:3.0,oth:0.3,za:true}];
+  const nodes=[],edges=[];for(let y=0;y<H;y++)for(let x=0;x<W;x++)nodes.push([x*SP,y*SP]);
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const id=y*W+x;
+    if(x<W-1){const a=ART_ROWS.includes(y);edges.push([id,id+1,SP,(a?13.9:8.33),a?2:0])}
+    if(y<H-1&&!(y===RIVER_Y&&!BRIDGES.includes(x))){const a=ART_COLS.includes(x);edges.push([id,id+W,SP,(a?13.9:8.33),a?2:0])}}
+  const pop=[],job=[],oth=[];const r=mulberry32(7);
+  for(let y=0;y<H;y++)for(let x=0;x<W;x++){const d=Math.hypot(x-CBD.x,y-CBD.y);
+    let p=0.3+1.3*Math.exp(-((d-4.5)**2)/7);if(d<2)p*=0.45;if(y>RIVER_Y)p+=0.35;if(x<=0||x>=15||y<=0||y>=15)p*=0.7;
+    let j=0.08+5*Math.exp(-d*d/4.5),o=0.25*p+2.2*Math.exp(-d*d/6);
+    for(const h of HUBS){const g=Math.exp(-((x-h.x)**2+(y-h.y)**2)/1.2);j+=h.job*g;o+=h.oth*g;p+=(h.pop||0)*g;if(h.za)p*=(1-0.7*g)}
+    pop.push(p*(0.8+0.4*r()));job.push(j*(0.85+0.3*r()));oth.push(o*(0.85+0.3*r()))}
+  const ROW_N=['Rue des Tilleuls','Rue du Moulin','Avenue de la Gare','Rue Pasteur','Rue des Écoles','Rue Victor-Hugo','Rue de la Paix','Boulevard du Centre','Rue des Lilas','Quai Nord','Quai Sud','Rue de la Rive','Rue des Peupliers','Avenue du Commerce','Rue des Artisans','Rue des Forges'];
+  const COL_N=['Rue de l\'Ouest','Rue Lamartine','Rue Molière','Avenue de l\'Université','Rue Voltaire','Rue Colbert','Rue du Pont','Avenue de la République','Rue Jean-Jaurès','Rue Racine','Rue Gambetta','Rue de Verdun','Avenue de l\'Hôpital','Rue Berlioz','Rue des Vignes','Rue de l\'Est'];
+  const places=HUBS.map(h=>({name:h.name,node:h.y*W+h.x,kind:'lieu'}));
+  for(let y=0;y<H;y++)for(let x=0;x<W;x+=3)places.push({name:`${2*x+1} ${ROW_N[y]}`,node:y*W+x,kind:'adresse'});
+  for(let x=0;x<W;x++)for(let y=1;y<H;y+=4)places.push({name:`${2*y+2} ${COL_N[x]}`,node:y*W+x,kind:'adresse'});
+  return{id:'bellerive',name:'Bellerive',fictional:true,dotM:85,nodes,edges,pop,job,oth,turn:8,
+    depots:[[1,7],[14,8],[5,15],[13,11]].map(([x,y])=>y*W+x),hubs:HUBS.map(h=>({name:h.name,node:h.y*W+h.x,right:h.x>11})),places,
+    bbox:[0,0,(W-1)*SP,(H-1)*SP],area:((W-1)*SP/1000)*((H-1)*SP/1000),blocks:[4,4],
+    desc:`une ville fictive de 7,5 × 7,5 km coupée par une rivière à quatre ponts`,
+    defaults:{pop:120000,trips:2.8,share:6,traffic:0.6,fleet:220,cap:8,range:250,charge:60,wait:10,detour:50,walk:0,dwell:30,guarantee:false,rebal:true,smart:true,fareBase:1.5,fareKm:0.25,overhead:15,elastic:true,vehDay:110,kmCost:0.18,vot:15,grid:250},
+    ranges:{pop:[20000,400000,10000],fleet:[10,1500,10]},
+    drawBase(g,V,C){const s=V.s,X=x=>V.ox+x*s,Y=y=>V.oy+y*s,cell=SP*s;
+      const jm=Math.max(...job),pm=Math.max(...pop);
+      for(let y=0;y<H-1;y++)for(let x=0;x<W-1;x++){const ids=[y*W+x,y*W+x+1,(y+1)*W+x,(y+1)*W+x+1];const bx=X(x*SP)+2,by=Y(y*SP)+2,bs=cell-4;
+        if(y===RIVER_Y){g.fillStyle=C.river;g.fillRect(X(x*SP)-1,by-1,cell+2,bs+2);continue}
+        g.fillStyle=C.block;g.fillRect(bx,by,bs,bs);
+        if((x===5||x===6)&&y===8){g.fillStyle=C.park;g.fillRect(bx,by,bs,bs);continue}
+        const jv=ids.reduce((a,i)=>a+job[i],0)/4/jm,pv=ids.reduce((a,i)=>a+pop[i],0)/4/pm;
+        g.globalAlpha=Math.min(.55,jv*.6);g.fillStyle=C.cbd;g.fillRect(bx,by,bs,bs);g.globalAlpha=Math.min(.35,pv*.3);g.fillStyle=C.accent;g.fillRect(bx+bs*.15,by+bs*.15,bs*.7,bs*.7);g.globalAlpha=1}
+      g.fillStyle=C.river;g.fillRect(0,Y(RIVER_Y*SP)+2,X(0),cell-4);g.fillRect(X((W-1)*SP),Y(RIVER_Y*SP)+2,V.w,cell-4);
+      g.lineCap='round';
+      for(const art of [0,2])for(const [a,b,,,cl] of edges){if(cl!==art)continue;g.strokeStyle=art?C['road-art']:C.road;g.lineWidth=art?Math.max(3,cell*.13):Math.max(1.5,cell*.06);g.beginPath();g.moveTo(X(nodes[a][0]),Y(nodes[a][1]));g.lineTo(X(nodes[b][0]),Y(nodes[b][1]));g.stroke()}
+      g.textAlign='left';g.font=`italic 500 ${Math.max(9,Math.min(12,cell*.32))}px Barlow, sans-serif`;g.fillStyle=C.muted;g.fillText('La Rive',X(0.3*SP),Y((RIVER_Y+0.62)*SP))}};
+}
+
+/* Active city state (swapped by loadCity) */
+let ORD,CITY=null,N=0,NODEX,NODEY,ET,EL,EDGES,D,L,NX,NEAR_DEP,WALKN,DEPOTS,HUBS,AREA_KM2;
+let popN,jobN,othN,mixN,cPop,cJob,cOth,cMix,NB,blockOf,blockCenter,BLOCKW;
+function loadCity(c){
+  CITY=c;N=c.nodes.length;NODEX=new Float64Array(N);NODEY=new Float64Array(N);c.nodes.forEach((p,i)=>{NODEX[i]=p[0];NODEY[i]=p[1]});
+  ET=new Float32Array(N*N);EL=new Float32Array(N*N);EDGES=c.edges;const adj=Array.from({length:N},()=>[]);
+  for(const [a,b,len,sp] of c.edges){const t=len/sp+(c.turn||0);ET[a*N+b]=ET[b*N+a]=t;EL[a*N+b]=EL[b*N+a]=len;adj[a].push(b);adj[b].push(a)}
+  // all-pairs shortest travel times (Dijkstra from each node, binary heap)
+  D=new Float32Array(N*N).fill(Infinity);L=new Float32Array(N*N);NX=new Int16Array(N*N).fill(-1);
+  const dist=new Float64Array(N),len=new Float64Array(N),pred=new Int32Array(N),hp=new Int32Array(N*8+16),hk=new Float64Array(N*8+16);
+  for(let s=0;s<N;s++){dist.fill(Infinity);pred.fill(-1);dist[s]=0;len[s]=0;let hn=0;
+    const push=(v,k)=>{let i=hn++;hp[i]=v;hk[i]=k;while(i>0){const p=(i-1)>>1;if(hk[p]<=hk[i])break;[hp[p],hp[i]]=[hp[i],hp[p]];[hk[p],hk[i]]=[hk[i],hk[p]];i=p}};
+    push(s,0);
+    while(hn){const u=hp[0],ku=hk[0];hn--;hp[0]=hp[hn];hk[0]=hk[hn];let i=0;for(;;){const l=2*i+1,r=l+1;let m=i;if(l<hn&&hk[l]<hk[m])m=l;if(r<hn&&hk[r]<hk[m])m=r;if(m===i)break;[hp[m],hp[i]]=[hp[i],hp[m]];[hk[m],hk[i]]=[hk[i],hk[m]];i=m}
+      if(ku>dist[u])continue;
+      for(const v of adj[u]){const nd=ku+ET[u*N+v];if(nd<dist[v]){dist[v]=nd;len[v]=len[u]+EL[u*N+v];pred[v]=u;if(hn<hp.length)push(v,nd)}}}
+    // undirected: path v -> s first hop is pred[v] on the tree rooted at s
+    for(let v=0;v<N;v++){D[v*N+s]=dist[v];L[v*N+s]=len[v];NX[v*N+s]=v===s?s:pred[v]}}
+  ORD=new Int16Array(N*N);const tmp=new Array(N);for(let o=0;o<N;o++){for(let n=0;n<N;n++)tmp[n]=n;tmp.sort((a,b)=>D[a*N+o]-D[b*N+o]);for(let n=0;n<N;n++)ORD[o*N+n]=tmp[n]}
+  DEPOTS=c.depots;HUBS=c.hubs;AREA_KM2=c.area;
+  NEAR_DEP=new Int16Array(N);for(let i=0;i<N;i++){let b=DEPOTS[0];for(const d of DEPOTS)if(D[i*N+d]<D[i*N+b])b=d;NEAR_DEP[i]=b}
+  WALKN=Array.from({length:N},(_,i)=>{const a=[];for(let j=0;j<N;j++)if(j!==i&&L[i*N+j]<=1000)a.push(j);return a});
+  popN=norm(c.pop.slice());jobN=norm(c.job.slice());othN=norm(c.oth.slice());mixN=popN.map((v,i)=>0.5*v+0.5*othN[i]);
+  cPop=normCum(popN);cJob=normCum(jobN);cOth=normCum(othN);cMix=normCum(mixN);
+  // rebalancing zones: grid over the bounding box, empty cells dropped
+  const [bx0,by0,bx1,by1]=c.bbox,[gx,gy]=c.blocks,raw=new Int32Array(N),map=new Map();
+  for(let i=0;i<N;i++){const cx=Math.min(gx-1,Math.floor((NODEX[i]-bx0)/(bx1-bx0+1e-9)*gx)),cy=Math.min(gy-1,Math.floor((NODEY[i]-by0)/(by1-by0+1e-9)*gy));raw[i]=cy*gx+cx;if(!map.has(raw[i]))map.set(raw[i],map.size)}
+  NB=map.size;blockOf=new Int16Array(N);for(let i=0;i<N;i++)blockOf[i]=map.get(raw[i]);
+  blockCenter=new Int16Array(NB);for(let b=0;b<NB;b++){let best=-1,bw=-1;for(let i=0;i<N;i++)if(blockOf[i]===b){const w=popN[i]+jobN[i]+othN[i];if(w>bw){bw=w;best=i}}blockCenter[b]=best}
+  BLOCKW=[0,1].map(we=>Array.from({length:24},(_,h)=>{const m=purposeMix(h,we);const w=new Float64Array(NB);
+    for(let i=0;i<N;i++)w[blockOf[i]]+=m[0]*popN[i]+m[1]*jobN[i]+m[2]*mixN[i];const s=w.reduce((a,b)=>a+b,0);return w.map(v=>v/s)}));
+}
+function nearestNode(x,y){let b=0,bd=Infinity;for(let i=0;i<N;i++){const d=(NODEX[i]-x)**2+(NODEY[i]-y)**2;if(d<bd){bd=d;b=i}}return b}
 
 /* =================== Parameters =================== */
 const PARAMS=[
  {g:'Ville et demande',items:[
   {id:'pop',label:'Population',min:20000,max:400000,step:10000,v:120000,f:v=>nf(v)+' hab.',
-   info:`<p>Nombre d'habitants de Bellerive. La surface de la ville ne change pas (56 km²) : ajouter des habitants augmente la densité de demande, ce qui aide les taxibus à trouver des passagers qui vont dans la même direction.</p><p>Avec les déplacements par habitant et la part modale, ce paramètre fixe le nombre de demandes par jour (affiché en bas de ce panneau).</p>`,
-   rep:`Repères : 120 000 hab. sur 56 km² ≈ 2 100 hab./km², une ville moyenne. San Francisco ≈ 7 000, Paris ≈ 20 000 hab./km².`},
+   info:`<p>Nombre d'habitants de la ville simulée. Sa surface ne change pas (56 km² pour Bellerive, 105 km² pour Paris) : ajouter des habitants augmente la densité de demande, ce qui aide les taxibus à trouver des passagers qui vont dans la même direction.</p><p>Avec les déplacements par habitant et la part modale, ce paramètre fixe le nombre de demandes par jour (affiché en bas de ce panneau).</p>`,
+   rep:`Repères : Bellerive, 120 000 hab. sur 56 km² ≈ 2 100 hab./km², une ville moyenne. San Francisco ≈ 7 000, Paris ≈ 20 000 hab./km² (2,1 millions d'habitants).`},
   {id:'trips',label:'Déplacements / habitant / jour',min:1.5,max:4,step:0.1,v:2.8,f:v=>nf(v,1),
    info:`<p>Nombre moyen de trajets qu'un habitant fait dans une journée de semaine, tous modes confondus : aller au travail, en revenir, courses, école, loisirs. Un aller-retour compte pour deux.</p><p>Le week-end, le modèle réduit le volume (−15 % le samedi, −28 % le dimanche) et étale la demande sur la journée.</p>`,
    rep:`Repères : les enquêtes de mobilité trouvent en général 3 à 4 déplacements par personne et par jour.`},
@@ -421,6 +519,8 @@ const PARAMS=[
    rep:`Les services réels de transport à la demande utilisent souvent des « arrêts virtuels » à 100-300 m. Avec la marche, la simulation est 3 à 6 fois plus lente.`},
   {id:'dwell',label:'Temps d\'arrêt par montée/descente',min:10,max:120,step:5,v:30,f:v=>v+' s',
    info:`<p>Temps d'immobilisation à chaque arrêt pour faire monter ou descendre des passagers (ouverture des portes, ceinture, bagages). Il s'ajoute au trajet de tous les passagers à bord : avec beaucoup d'arrêts, il pèse lourd.</p>`},
+  {id:'guarantee',label:'Heure d\'arrivée garantie',toggle:true,v:false,
+   info:`<p>Quand l'option est activée, l'heure d'arrivée annoncée à la réservation devient un engagement : le système n'a plus le droit d'ajouter des passagers sur le trajet s'ils retardent l'arrivée de plus de 4 minutes par rapport à cette heure.</p><p>La ponctualité monte, mais il y a moins de regroupements possibles une fois le passager à bord : il faut un peu plus de véhicules pour le même service.</p>`},
   {id:'rebal',label:'Rééquilibrage des véhicules vides',toggle:true,v:true,
    info:`<p>Toutes les 5 minutes, les véhicules libres depuis plus de 2 minutes sont envoyés vers les quartiers où la demande va arriver dans la demi-heure : quartiers résidentiels le matin, centre et zones d'emploi le soir.</p><p>Cela ajoute des km à vide, mais réduit l'attente et les refus.</p>`},
   {id:'smart',label:'Recharge en heures creuses',toggle:true,v:true,
@@ -453,8 +553,8 @@ const PARAMS=[
  ]},
 ];
 const P={};PARAMS.forEach(g=>g.items.forEach(p=>P[p.id]=p.v));
-const DEFAULTS={...P};
-const AVG_KM=4.7,REF_FARE=DEFAULTS.fareBase+DEFAULTS.fareKm*AVG_KM;
+let DEFAULTS={...P};
+let AVG_KM=4.7;let REF_FARE=DEFAULTS.fareBase+DEFAULTS.fareKm*AVG_KM;
 const effShare=P=>{if(!P.elastic)return P.share;const x=(P.fareBase+P.fareKm*AVG_KM)/REF_FARE;return P.share*Math.exp(-0.2*(x*x-1))};
 const BUS_KWH_KM=0.3,CAR_CO2_KM=0.17,CAR_COST_KM=0.45,WALK_SPEED=1.3;
 const vehCostF=cap=>0.6+0.05*cap,kmCostF=cap=>0.7+0.0375*cap;
@@ -537,9 +637,15 @@ function makeSim(Pin,seed,days){
   const hIdx=t=>Math.min(days*24-1,Math.floor(t/3600)),dIdx=t=>Math.min(days-1,Math.floor(t/86400));
   const avail=v=>v.state!==CHG&&!v.toCharge&&v.batt>0.12*range&&v.stops.length<120;
   const walkM=P.walk||0;
-  function getCands(o,lp,t,cg,lim){const cands=[];
-    for(const v of V){if(!avail(v))continue;const sN=v.nxt>=0?v.nxt:v.cur,sT=v.nxt>=0?v.tArr:Math.max(t,v.free);const lb=sT+D[sN*N+o]*cg;if(lb<=lp)cands.push([lb,v])}
-    if(cands.length>lim){cands.sort((a,b)=>a[0]-b[0]);cands.length=lim}return cands}
+  // vehicles bucketed by the node they will plan from (next node if moving)
+  const BK=Array.from({length:N},()=>[]);
+  function setBucket(v,n){if(v.bn===n)return;if(v.bn>=0){const a=BK[v.bn],last=a.pop();if(last!==v){a[v.bi]=last;last.bi=v.bi}}v.bn=n;v.bi=BK[n].length;BK[n].push(v)}
+  for(const v of V){v.bn=-1;setBucket(v,v.cur)}
+  function getCands(o,lp,t,cg,lim){let res=[],kth=Infinity;const base=o*N;
+    for(let k=0;k<N;k++){const n=ORD[base+k],dt=D[n*N+o]*cg;if(t+dt>lp||t+dt>kth)break;
+      const a=BK[n];for(let q=0;q<a.length;q++){const v=a[q];if(!avail(v))continue;const sT=v.nxt>=0?v.tArr:Math.max(t,v.free),lb=sT+dt;if(lb<=lp&&lb<kth)res.push([lb,v])}
+      if(res.length>=2*lim||(kth===Infinity&&res.length>=lim)){res.sort((x,y)=>x[0]-y[0]);res.length=lim;kth=res[lim-1][0]}}
+    if(res.length>lim){res.sort((x,y)=>x[0]-y[0]);res.length=lim}return res}
 
   function evalInsert(v,r,t,cg,best,pen){
     const St=v.stops,k=St.length,o=r.o,d=r.d;
@@ -570,26 +676,31 @@ function makeSim(Pin,seed,days){
           if(c<best.c){best.c=c;best.v=v;best.i=i;best.j=j;best.tp=tPick;best.td=tDr;best.rq=r}}}
     }
   }
-  function newRequest(t){
-    const di=Math.floor(t/86400),we=di%7>=5,h=Math.floor((t%86400)/3600),mx=purposeMix(h,we);
-    const u=rnd();let co,cd;if(u<mx[0]){co=cPop;cd=cJob}else if(u<mx[0]+mx[1]){co=cJob;cd=cPop}else{co=cMix;cd=cOth}
-    let o,d,tries=0;do{o=sampleCum(co,rnd());d=sampleCum(cd,rnd());tries++}while((o===d||L[o*N+d]<900)&&tries<25);
-    if(o===d||L[o*N+d]<900)return;
-    const cg=cong(t),direct=D[o*N+d]*cg;
-    const mr=direct*(1+detour)+90;const r={fare:P.fareBase+P.fareKm*L[o*N+d]/1000,o,d,t,direct,mr,km:L[o*N+d]/1000,lp:t+maxWait,ld:t+maxWait+mr,tPick:-1,pmin:0,wO:0,wD:0,eta:0};
-    const hh=hours[hIdx(t)],dd=dayS[dIdx(t)];hh.req++;dd.req++;tot.req++;
+  function makeReq(o,d,t){const cg=cong(t),direct=D[o*N+d]*cg,mr=direct*(1+detour)+90;
+    return{fare:P.fareBase+P.fareKm*L[o*N+d]/1000,o,d,t,direct,mr,km:L[o*N+d]/1000,lp:t+maxWait,ld:t+maxWait+mr,tPick:-1,tDrop:-1,pmin:0,wO:0,wD:0,eta:0}}
+  function findBest(r,t){const cg=Math.max(cong(t),cong(t+900)),o=r.o,d=r.d;
     const best={c:Infinity,v:null,i:-1,j:-1,tp:0,td:0,rq:null};
     const run=(rq,pen,lim)=>{for(const c of getCands(rq.o,rq.lp,t,cg,lim))evalInsert(c[1],rq,t,cg,best,pen)};
     run(r,0,40);
     if(walkM>0){
       for(const o2 of WALKN[o]){const wO=L[o*N+o2];if(wO>walkM||o2===d)continue;const tw=wO/WALK_SPEED;if(tw>=maxWait*0.9)continue;run({...r,o:o2,wO,pmin:t+tw-60},0.4*tw,8)}
       for(const d2 of WALKN[d]){const wD=L[d2*N+d];if(wD>walkM||d2===o)continue;const tw=wD/WALK_SPEED;run({...r,d:d2,wD,ld:r.ld-tw,mr:r.mr-tw},0.4*tw,8)}}
-    if(!best.v){hh.rej++;dd.rej++;tot.rej++;return}
-    hh.acc++;dd.acc++;tot.acc++;
-    const v=best.v,rq=best.rq;rq.v=v.id;rq.ld=Math.min(rq.ld,best.tp+rq.mr+60);rq.eta=best.td;
+    return best}
+  function commit(best,t){const v=best.v,rq=best.rq;rq.v=v.id;rq.ld=Math.min(rq.ld,best.tp+rq.mr+60);if(P.guarantee)rq.ld=Math.min(rq.ld,best.td+240);rq.eta=best.td;rq.etaPick=best.tp;
     v.stops.splice(best.j,0,{node:rq.d,type:1,r:rq});v.stops.splice(best.i,0,{node:rq.o,type:0,r:rq});
-    if(v.nxt<0&&v.free<t)v.free=t;v.idle=false;v.rebal=-1;
-  }
+    if(v.nxt<0&&v.free<t)v.free=t;v.idle=false;v.rebal=-1;return rq}
+  function count(r,ok){const hh=hours[hIdx(r.t)],dd=dayS[dIdx(r.t)];hh.req++;dd.req++;tot.req++;if(ok){hh.acc++;dd.acc++;tot.acc++}else{hh.rej++;dd.rej++;tot.rej++}}
+  function newRequest(t){
+    const di=Math.floor(t/86400),we=di%7>=5,h=Math.floor((t%86400)/3600),mx=purposeMix(h,we);
+    const u=rnd();let co,cd;if(u<mx[0]){co=cPop;cd=cJob}else if(u<mx[0]+mx[1]){co=cJob;cd=cPop}else{co=cMix;cd=cOth}
+    let o,d,tries=0;do{o=sampleCum(co,rnd());d=sampleCum(cd,rnd());tries++}while((o===d||L[o*N+d]<900)&&tries<25);
+    if(o===d||L[o*N+d]<900)return;
+    const r=makeReq(o,d,t),best=findBest(r,t);count(r,!!best.v);if(best.v)commit(best,t)}
+  // phone app: quote without committing, then book for real
+  S.quote=(o,d)=>{const t=S.t,r=makeReq(o,d,t),best=findBest(r,t);if(!best.v)return null;
+    return{v:best.v.id,tPick:best.tp,tDrop:best.td,fare:r.fare,direct:r.direct,km:r.km,onboard:best.v.load,planned:best.v.stops.filter(s=>s.type===0).length,wO:best.rq.wO,wD:best.rq.wD}};
+  S.book=(o,d)=>{const t=S.t,r=makeReq(o,d,t),best=findBest(r,t);count(r,!!best.v);if(!best.v)return null;const rq=commit(best,t);rq.user=true;return rq};
+  S.schedule=v=>{const t=S.t,cg=Math.max(cong(t),cong(t+900));let time=v.nxt>=0?v.tArr:Math.max(t,v.free),node=v.nxt>=0?v.nxt:v.cur;return v.stops.map(s=>{time+=D[node*N+s.node]*cg;const a=time;time+=dw;node=s.node;return a})};
   function traverse(v){const k=v.cur*N+v.nxt,len=EL[k],km=len/1000;
     v.km+=km;v.batt-=km;tot.vkm+=km;const dd=dayS[dIdx(v.tArr)];dd.vkm+=km;
     if(v.load===0){tot.vkmEmpty+=km;dd.vkmEmpty+=km}tot.pkm+=v.load*km;dd.pkm+=v.load*km;tot.loadKm[v.load]+=km;
@@ -597,7 +708,7 @@ function makeSim(Pin,seed,days){
   function serve(v,tn){const St=v.stops;
     while(St.length&&St[0].node===v.cur){const s=St.shift(),r=s.r,hh=hours[hIdx(r.t)],dd=dayS[dIdx(r.t)];
       if(s.type===0){v.load++;r.tPick=tn;const w=tn-r.t;hh.picked++;hh.sumWait+=w;dd.picked++;dd.sumWait+=w;tot.picked++;tot.sumWait+=w;tot.waitHist[Math.min(120,Math.floor(w/30))]++;if(r.wO||r.wD){tot.walkers++;tot.walkM+=r.wO+r.wD}}
-      else{v.load--;const ride=tn-r.tPick;if(tn<=r.eta+300){hh.onTime++;dd.onTime++;tot.onTime++}hh.done++;hh.sumRide+=ride;hh.sumDirect+=r.direct;hh.directT+=r.direct;dd.done++;dd.sumRide+=ride;dd.sumDirect+=r.direct;dd.directKm+=r.km;
+      else{v.load--;r.tDrop=tn;const ride=tn-r.tPick;if(tn<=r.eta+300){hh.onTime++;dd.onTime++;tot.onTime++}hh.done++;hh.sumRide+=ride;hh.sumDirect+=r.direct;hh.directT+=r.direct;dd.done++;dd.sumRide+=ride;dd.sumDirect+=r.direct;dd.directKm+=r.km;
         tot.done++;tot.sumRide+=ride;tot.sumDirect+=r.direct;tot.directKm+=r.km;tot.rev+=r.fare;dd.rev+=r.fare;hh.rev+=r.fare}}
     if(v.load>tot.maxLoad)tot.maxLoad=v.load;v.free=tn+dw}
   function advance(v,t){
@@ -617,18 +728,18 @@ function makeSim(Pin,seed,days){
       if(target===v.cur){
         if(v.toCharge){v.toCharge=false;v.state=CHG;v.until=tn+300+P.charge*60*Math.max(0,1-v.batt/range);continue}
         v.rebal=-1;continue}
-      const nx=NX[v.cur*N+target];v.nxt=nx;v.tDep=tn;v.tArr=tn+ET[v.cur*N+nx]*cong(tn);return
+      const nx=NX[v.cur*N+target];v.nxt=nx;setBucket(v,nx);v.tDep=tn;v.tArr=tn+ET[v.cur*N+nx]*cong(tn);return
     }
   }
   function rebalance(t){
     const w=BLOCKW[Math.floor((t+1800)/86400)%7>=5?1:0][Math.floor(((t+1800)%86400)/3600)];
-    const cnt=new Float64Array(16);let total=0;const idle=[];
+    const cnt=new Float64Array(NB);let total=0;const idle=[];
     for(const v of V){if(v.stops.length||v.state===CHG||v.toCharge)continue;
       const b=blockOf[v.rebal>=0?v.rebal:(v.nxt>=0?v.nxt:v.cur)];cnt[b]++;total++;
       if(v.rebal<0&&v.nxt<0&&v.idle&&t-v.idleSince>=120)idle.push(v)}
     if(!total)return;
     for(const v of idle){const b=blockOf[v.cur];if(cnt[b]<=total*w[b]+1)continue;
-      let bb=-1,bs=-Infinity;for(let k=0;k<16;k++){const def=total*w[k]-cnt[k];if(def<1)continue;const sc=def-D[v.cur*N+blockCenter[k]]/600;if(sc>bs){bs=sc;bb=k}}
+      let bb=-1,bs=-Infinity;for(let k=0;k<NB;k++){const def=total*w[k]-cnt[k];if(def<1)continue;const sc=def-D[v.cur*N+blockCenter[k]]/600;if(sc>bs){bs=sc;bb=k}}
       if(bb<0)continue;v.rebal=blockCenter[bb];cnt[b]--;cnt[bb]++}
   }
   function sample(t){const hh=hours[hIdx(t-1)];hh.samp++;
@@ -668,38 +779,30 @@ function summarize(S){
 let curTab='live';
 document.querySelectorAll('.tabs button').forEach(b=>b.addEventListener('click',()=>{
   curTab=b.dataset.tab;document.querySelectorAll('.tabs button').forEach(x=>x.setAttribute('aria-selected',x===b));
-  ['live','report','opt','learn'].forEach(t=>$('#tab-'+t).hidden=t!==curTab);
-  if(curTab==='live')resizeMap();if(curTab==='report'||curTab==='opt')rerenderCharts()}));
+  ['live','report','opt','app','learn'].forEach(t=>$('#tab-'+t).hidden=t!==curTab);
+  if(curTab==='live')resizeMap();if(curTab==='app'){app.layerKey='';renderSheet()}if(curTab==='report'||curTab==='opt')rerenderCharts()}));
 
 /* =================== Live view =================== */
 const cvs=$('#map'),ctx=cvs.getContext('2d');
 let live=null,playing=true,speed=120,dispT=0,selected=-1,lastTs=0,lastKpi=0,resetTimer=null,mapLayer=null,colors={};
-let geo={m:0,cell:0,size:0,dpr:1};
+let geo={s:1,ox:0,oy:0,w:0,h:0,dpr:1,cell:20};
 function readColors(){const cs=getComputedStyle(document.documentElement);['map-bg','block','road','road-art','river','park','cbd','ink','muted','accent','accent-soft','accent-deep','amber','violet','surface','line','bad'].forEach(k=>colors[k]=cs.getPropertyValue('--'+k).trim())}
-const px=i=>geo.m+(i%W)*geo.cell,py=i=>geo.m+((i/W)|0)*geo.cell;
-function resizeMap(){const w=cvs.clientWidth;if(!w)return;geo.dpr=window.devicePixelRatio||1;geo.size=w;cvs.width=w*geo.dpr;cvs.height=w*geo.dpr;cvs.style.height=w+'px';
-  geo.m=Math.max(14,w*0.035);geo.cell=(w-2*geo.m)/(W-1);buildMapLayer();draw()}
+const px=i=>geo.ox+NODEX[i]*geo.s,py=i=>geo.oy+NODEY[i]*geo.s;
+function fitView(w,bbox,pad){const [x0,y0,x1,y1]=bbox,bw=x1-x0,bh=y1-y0,h=Math.round(w*bh/bw);const m=Math.max(12,w*pad);const s=Math.min((w-2*m)/bw,(h-2*m)/bh+0.0001);
+  return{s,ox:(w-bw*s)/2-x0*s,oy:(h-bh*s)/2-y0*s,w,h}}
+function resizeMap(){const w=cvs.clientWidth;if(!w||!CITY)return;geo.dpr=window.devicePixelRatio||1;Object.assign(geo,fitView(w,CITY.bbox,0.03));
+  cvs.width=w*geo.dpr;cvs.height=geo.h*geo.dpr;cvs.style.height=geo.h+'px';geo.cell=CITY.dotM*geo.s/0.17;buildMapLayer();draw()}
+function drawCityLayer(g,V,C,labels){g.fillStyle=C['map-bg'];g.fillRect(0,0,V.w,V.h);CITY.drawBase(g,V,C);
+  const P_=i=>[V.ox+NODEX[i]*V.s,V.oy+NODEY[i]*V.s],fs=labels==='small'?10:Math.max(9.5,Math.min(12,V.w/70));
+  g.font=`600 ${fs}px Barlow, system-ui, sans-serif`;g.textBaseline='alphabetic';
+  if(labels)for(const h of HUBS){const [X,Y]=P_(h.node);if(X<0||Y<0||X>V.w||Y>V.h)continue;g.fillStyle=C.ink;g.beginPath();g.arc(X,Y,3,0,7);g.fill();
+    g.textAlign=h.right?'right':'left';const tx=h.right?X-6:X+6;g.lineWidth=3;g.strokeStyle=C['map-bg'];g.strokeText(h.name,tx,Y-6);g.fillText(h.name,tx,Y-6)}
+  for(const d of DEPOTS){const [X,Y]=P_(d),sz=labels==='small'?11:Math.max(10,Math.min(16,V.w/55));g.fillStyle=C.violet;g.fillRect(X-sz/2,Y-sz/2,sz,sz);g.fillStyle=C.surface;g.font=`700 ${sz*.75}px Barlow, sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText('⚡',X,Y+1);g.textBaseline='alphabetic'}
+  g.textAlign='left'}
 function buildMapLayer(){readColors();const c=document.createElement('canvas');c.width=cvs.width;c.height=cvs.height;const g=c.getContext('2d');g.scale(geo.dpr,geo.dpr);
-  const {m,cell,size}=geo;g.fillStyle=colors['map-bg'];g.fillRect(0,0,size,size);
-  const jm=Math.max(...jobN),pm=Math.max(...popN);
-  for(let y=0;y<H-1;y++)for(let x=0;x<W-1;x++){const ids=[y*W+x,y*W+x+1,(y+1)*W+x,(y+1)*W+x+1];
-    const X=m+x*cell+2,Y=m+y*cell+2,s=cell-4;
-    if(y===RIVER_Y){g.fillStyle=colors.river;g.fillRect(m+x*cell-1,Y-1,cell+2,s+2);continue}
-    g.fillStyle=colors.block;g.fillRect(X,Y,s,s);
-    const jv=ids.reduce((a,i)=>a+jobN[i],0)/4/jm,pv=ids.reduce((a,i)=>a+popN[i],0)/4/pm;
-    if((x===5||x===6)&&(y===8))g.fillStyle=colors.park,g.fillRect(X,Y,s,s);
-    else{g.globalAlpha=Math.min(.55,jv*.6);g.fillStyle=colors.cbd;g.fillRect(X,Y,s,s);g.globalAlpha=Math.min(.35,pv*.3);g.fillStyle=colors.accent;g.fillRect(X+s*.15,Y+s*.15,s*.7,s*.7);g.globalAlpha=1}}
-  g.fillStyle=colors.river;g.fillRect(0,m+RIVER_Y*cell+2,m,cell-4);g.fillRect(size-m,m+RIVER_Y*cell+2,m,cell-4);
-  g.lineCap='round';
-  for(const art of [false,true])for(const [a,b,isA] of EDGES){if(isA!==art)continue;g.strokeStyle=art?colors['road-art']:colors.road;g.lineWidth=art?Math.max(3,cell*.13):Math.max(1.5,cell*.06);g.beginPath();g.moveTo(px(a),py(a));g.lineTo(px(b),py(b));g.stroke()}
-  const fs=Math.max(9,Math.min(12,cell*.32));g.font=`600 ${fs}px Barlow, system-ui, sans-serif`;
-  for(const h of HUBS){const X=m+h.x*cell,Y=m+h.y*cell;g.fillStyle=colors.ink;g.beginPath();g.arc(X,Y,Math.max(3,cell*.12),0,7);g.fill();
-    g.textAlign=h.x>11?'right':'left';const tx=h.x>11?X-6:X+6;g.lineWidth=3;g.strokeStyle=colors['map-bg'];g.strokeText(h.name,tx,Y-6);g.fillText(h.name,tx,Y-6)}
-  for(const d of DEPOTS){const X=px(d),Y=py(d),s=Math.max(9,cell*.36);g.fillStyle=colors.violet;g.fillRect(X-s/2,Y-s/2,s,s);g.fillStyle=colors.surface;g.font=`700 ${s*.75}px Barlow, sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText('⚡',X,Y+1);g.textBaseline='alphabetic'}
-  g.textAlign='left';g.font=`italic 500 ${fs}px Barlow, sans-serif`;g.fillStyle=colors.muted;g.fillText('La Rive',m+0.3*cell,m+RIVER_Y*cell+cell*.62);
-  mapLayer=c}
+  drawCityLayer(g,geo,colors,true);mapLayer=c}
 function vehPos(v,t){if(v.nxt>=0){const f=Math.max(0,Math.min(1,(t-v.tDep)/((v.tArr-v.tDep)||1)));return[px(v.cur)+(px(v.nxt)-px(v.cur))*f,py(v.cur)+(py(v.nxt)-py(v.cur))*f]}return[px(v.cur),py(v.cur)]}
-function draw(){if(!mapLayer||!live)return;const {dpr,size,cell}=geo;ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(mapLayer,0,0);ctx.setTransform(dpr,0,0,dpr,0,0);
+function draw(){if(!mapLayer||!live)return;const {dpr,cell}=geo;ctx.setTransform(1,0,0,1,0,0);ctx.drawImage(mapLayer,0,0);ctx.setTransform(dpr,0,0,dpr,0,0);
   const t=dispT;
   // waiting passengers
   const wcount=new Map();for(const v of live.V)for(const s of v.stops)if(s.type===0)wcount.set(s.node,(wcount.get(s.node)||0)+1);
@@ -709,7 +812,7 @@ function draw(){if(!mapLayer||!live)return;const {dpr,size,cell}=geo;ctx.setTran
   if(selected>=0){const v=live.V[selected];if(v){ctx.strokeStyle=colors.ink;ctx.lineWidth=2;ctx.setLineDash([5,4]);ctx.beginPath();let [X,Y]=vehPos(v,t);ctx.moveTo(X,Y);let node=v.nxt>=0?v.nxt:v.cur;ctx.lineTo(px(node),py(node));
     for(const s of v.stops){let g=0;while(node!==s.node&&g++<64){node=NX[node*N+s.node];ctx.lineTo(px(node),py(node))}}ctx.stroke();ctx.setLineDash([]);
     v.stops.forEach((s,i)=>{const X=px(s.node),Y=py(s.node);ctx.fillStyle=s.type===0?colors.amber:colors.ink;ctx.beginPath();if(s.type===0)ctx.arc(X,Y,5,0,7);else ctx.rect(X-4.5,Y-4.5,9,9);ctx.fill()})}}
-  const r=Math.max(3.2,cell*.17);
+  const r=Math.max(2.4,cell*.17);
   for(const v of live.V){const [X,Y]=vehPos(v,t);ctx.beginPath();ctx.arc(X,Y,r,0,7);
     if(v.state===CHG||v.toCharge){ctx.fillStyle=colors.violet;ctx.fill()}
     else if(v.load>0){const o=v.load/live.P.cap;ctx.fillStyle=o<.34?colors['accent-soft']:o<.67?colors.accent:colors['accent-deep'];ctx.fill();ctx.lineWidth=1;ctx.strokeStyle=colors.surface;ctx.stroke()}
@@ -717,7 +820,9 @@ function draw(){if(!mapLayer||!live)return;const {dpr,size,cell}=geo;ctx.setTran
     else{ctx.fillStyle=colors.muted;ctx.globalAlpha=.75;ctx.fill();ctx.globalAlpha=1}
     if(v.id===selected){ctx.beginPath();ctx.arc(X,Y,r+4,0,7);ctx.lineWidth=2;ctx.strokeStyle=colors.ink;ctx.stroke()}}
 }
-function resetLive(){live=makeSim(P,1234,7);live.runTo(6.5*3600);dispT=live.t;selected=-1;updateLiveKpis(true)}
+function resetLive(){live=makeSim(P,1234,7);live.runTo(6.5*3600);dispT=live.t;selected=-1;updateLiveKpis(true);if(app.state&&app.state!=='search')appReset()}
+function appKpi(){const T=live.tot;let free=0,on=0;for(const v of live.V){if(v.state!==2&&!v.toCharge&&!v.stops.length)free++;on+=v.load}
+  $('#appkpi').innerHTML=`<dt>Taxibus en service</dt><dd>${nf(live.V.length)}</dd><dt>Libres maintenant</dt><dd>${nf(free)}</dd><dt>Passagers à bord</dt><dd>${nf(on)}</dd><dt>Demandes acceptées aujourd'hui</dt><dd>${T.req?pct(T.acc/T.req):'–'}</dd><dt>Trafic</dt><dd>×${nf(live.cong(dispT),2)}</dd>`;$('#ph-city').textContent=CITY.name}
 function scheduleLiveReset(){clearTimeout(resetTimer);resetTimer=setTimeout(resetLive,350)}
 function updateLiveKpis(force){if(!live)return;const T=live.tot;
   const d=Math.floor(dispT/86400);$('#clock').textContent=DAYS[d%7]+' '+hhmm(dispT);$('#cong').textContent='trafic ×'+nf(live.cong(dispT),2);
@@ -737,7 +842,8 @@ $('#play').addEventListener('click',()=>{playing=!playing;$('#play').innerHTML=p
 $('#speed').addEventListener('change',e=>speed=+e.target.value);
 $('#restart').addEventListener('click',resetLive);
 function frame(ts){const dt=Math.min(.1,(ts-lastTs)/1000||0);lastTs=ts;
-  if(live&&curTab==='live'&&!document.hidden){if(playing){dispT=Math.min(live.END,dispT+dt*speed);live.runTo(dispT)}draw();if(ts-lastKpi>250){lastKpi=ts;updateLiveKpis()}}
+  if(live&&(curTab==='live'||curTab==='app')&&!document.hidden){const sp=curTab==='app'?appSpeed:(playing?speed:0);if(sp){dispT=Math.min(live.END,dispT+dt*sp);live.runTo(dispT)}
+    if(curTab==='live'){draw();if(ts-lastKpi>250){lastKpi=ts;updateLiveKpis()}}else{appTick(ts);if(ts-lastKpi>500){lastKpi=ts;appKpi()}}}
   requestAnimationFrame(frame)}
 window.addEventListener('resize',()=>{clearTimeout(window._rz);window._rz=setTimeout(()=>{if(curTab==='live')resizeMap();rerenderCharts()},150)});
 const themeChange=()=>{buildMapLayer();draw()};
@@ -1018,7 +1124,7 @@ buildGoalForm();
 function renderLearn(){
   const daily=P.pop*P.trips*effShare(P)/100,peak=daily*Math.max(...PROF_WD);
   const items=[
-   ['La densité de demande décide de tout','1',`<p>Un taxibus ne se remplit que s'il existe, au même moment, d'autres demandes compatibles le long de son chemin. Plus il y a de demandes par km² et par heure, plus la probabilité d'en trouver une dans la fenêtre de détour est grande, et plus chaque véhicule transporte de monde. C'est un effet d'échelle : doubler la demande ne double pas la flotte.</p><p>Avec vos réglages, Bellerive génère <b>${nf(peak)} demandes à l'heure de pointe</b>, soit <b>${nf(peak/AREA_KM2)} par km² et par heure</b>. Faites varier la part modale entre 2 % et 20 % dans le Bilan et regardez le nombre de passagers par véhicule-km : c'est le paramètre qui le fait le plus bouger.</p>`],
+   ['La densité de demande décide de tout','1',`<p>Un taxibus ne se remplit que s'il existe, au même moment, d'autres demandes compatibles le long de son chemin. Plus il y a de demandes par km² et par heure, plus la probabilité d'en trouver une dans la fenêtre de détour est grande, et plus chaque véhicule transporte de monde. C'est un effet d'échelle : doubler la demande ne double pas la flotte.</p><p>Avec vos réglages, ${CITY.name} génère <b>${nf(peak)} demandes à l'heure de pointe</b>, soit <b>${nf(peak/AREA_KM2)} par km² et par heure</b>. Faites varier la part modale entre 2 % et 20 % dans le Bilan et regardez le nombre de passagers par véhicule-km : c'est le paramètre qui le fait le plus bouger.</p>`],
    ['La flotte se dimensionne sur la pointe','2',`<p>À 8 h et 18 h, la demande vaut 2 fois la moyenne de la journée, et la congestion rallonge chaque course. La flotte qui suffit à la pointe dort à moitié le reste du temps. Le graphique « Ce que fait la flotte » le montre : beaucoup de véhicules disponibles à 14 h et la nuit.</p><p>Pistes réelles : faire du transport de colis en heures creuses, réserver les recharges et la maintenance pour ces heures-là, étaler la pointe avec une tarification modulée.</p>`],
    ['Le compromis attente, détour, nombre de véhicules','3',`<p>Trois leviers se compensent : accepter plus d'attente ou plus de détour permet de regrouper davantage de passagers, donc de servir la même demande avec moins de véhicules et moins de km. Mais un trajet rallongé de plus de 30 à 40 % paraît lent et fait fuir les usagers vers la voiture.</p><p>Une bonne pratique est de garantir une heure d'arrivée maximale au moment de la réservation plutôt qu'une durée de trajet : l'usager sait quand il arrive, l'algorithme garde de la marge pour regrouper.</p>`],
    ['6 à 10 places suffisent','4',`<p>Au-delà de 8 à 10 places, les sièges supplémentaires ne se remplissent qu'en pointe sur les axes les plus chargés. Un véhicule plus gros coûte plus cher, roule moins vite en ville et met plus de temps à chaque arrêt. L'optimiseur vous montre à partir de combien de places le gain sur la flotte devient négligeable.</p><p>Sur les axes très chargés, une ligne de bus ou de tram classique reste plus efficace : le taxibus devient alors un rabattement vers ces lignes fortes.</p>`],
@@ -1030,16 +1136,177 @@ function renderLearn(){
    ['Ce que le modèle ne dit pas','8',`<p>L'acceptabilité d'un véhicule sans chauffeur partagé avec des inconnus (sécurité, propreté, supervision à distance), l'accessibilité pour les personnes à mobilité réduite, le prix payé par l'usager, et la réglementation. Ce sont souvent eux qui décident du succès, plus que l'algorithme.</p>`],
   ];
   let h=items.map(i=>`<article><h3><span class="rank">${i[1]}</span>${i[0]}</h3>${i[2]}</article>`).join('');
+  if(CITY.id==='paris')h=`<article class="wide"><h3>Paris : ce qui change par rapport à Bellerive</h3><p>Paris est environ 10 fois plus dense que Bellerive (20 000 habitants au km²) et très bien desservie par le métro, le RER et le bus. Un taxibus n'y remplacerait pas le métro : il viserait les trajets que le métro sert mal (de banlieue proche à banlieue proche, de périphérie à périphérie, la nuit, les personnes à mobilité réduite) et une partie des trajets en voiture, taxi et VTC. D'où une part modale par défaut faible (2 %), qui représente déjà environ 150 000 trajets par jour.</p><p>La densité joue à plein : avec autant de demandes au km², les véhicules se remplissent mieux qu'à Bellerive pour une attente plus courte. En revanche, les trajets sont plus longs (6,9 km en moyenne, environ 20 minutes), la congestion est forte, et la Seine ne se traverse que par les ponts : les détours coûtent cher. L'option « Heure d'arrivée garantie » est activée par défaut, car sans elle près d'un passager sur quatre arrive plus de 5 minutes après l'heure annoncée.</p><p class="note">Données : rues, arrondissements, Seine et parcs d'OpenStreetMap (extrait BBBike, novembre 2026), populations des arrondissements selon le recensement INSEE, emplois par arrondissement estimés. Le réseau est simplifié en ${N} carrefours, toutes les rues à double sens.</p></article>`+h;
   h+=`<article class="wide"><h3>Ordre de grandeur pour dimensionner</h3><p>Une estimation rapide de la flotte nécessaire en pointe :</p><div class="formula">flotte ≈ demandes de pointe par heure × (approche + trajet × (1 + détour)) ÷ 3600 ÷ passagers moyens à bord</div>
   <p style="margin-top:8px">Exemple avec vos réglages : ${nf(peak)} demandes/h × (4 min + 10 min × 1,3) ≈ ${nf(peak*(4+13)/60)} heures-passager à bord pour une heure de pointe, à diviser par le nombre moyen de passagers à bord (2 à 4 selon la densité). Soit environ <b>${nf(peak*17/60/3.5)} à ${nf(peak*17/60/2)}</b> véhicules en circulation, plus une marge pour la recharge. La simulation affine ce chiffre parce qu'elle tient compte de la géographie, du trafic et des refus.</p></article>`;
   h+=`<article class="wide"><h3>Ce qu'on sait déjà sur le sujet</h3><p>Une étude du MIT (Alonso-Mora et al., PNAS, 2017) a rejoué les courses de taxi de Manhattan : environ 2 000 véhicules de 10 places, ou 3 000 de 4 places, auraient pu servir 98 % des trajets assurés par les quelque 13 000 taxis de la ville, avec une attente moyenne d'environ 3 minutes. Le Forum international des transports (OCDE) est arrivé à des conclusions du même ordre pour Lisbonne en combinant taxis partagés, minibus à la demande et métro. Les services de minibus à la demande déjà en place (avec chauffeur) montrent en revanche que hors zones denses, la mutualisation reste faible et le coût par trajet élevé.</p></article>`;
-  h+=`<article class="wide"><h3>Hypothèses du modèle</h3><p class="note">Ville en grille de 16 × 16 carrefours espacés de 500 m, avenues à 50 km/h, rues à 30 km/h, 8 s de perte par carrefour. Population, emplois et commerces répartis autour d'un centre et de cinq pôles (gare, université, hôpital, centre commercial, zone d'activités). Demande horaire typique d'une semaine (pointes 8 h et 18 h, week-end plus plat), motifs domicile-travail le matin et le soir. Les demandes arrivent en temps réel : chacune est insérée dans l'itinéraire du véhicule qui minimise le temps ajouté, sous contraintes de capacité, d'attente et de détour de tous les passagers déjà affectés ; sinon elle est refusée. Prise en charge aux carrefours, sans marche ni annulation. Marche possible jusqu'à un carrefour voisin à 1,3 m/s si l'option est activée. Congestion uniforme sur la ville. Coûts proportionnels à la taille des véhicules (référence 8 places). Recharge dans 4 dépôts sans limite de bornes. Voiture de référence : ${CAR_CO2_KM*1000} g CO₂/km et ${nf(CAR_COST_KM,2)} €/km ; taxibus électrique : ${BUS_KWH_KM} kWh/km.</p></article>`;
+  h+=`<article class="wide"><h3>Hypothèses du modèle</h3><p class="note">${CITY.id==='paris'?`Paris intra-muros : rues principales (primaires, secondaires et tertiaires) d'OpenStreetMap regroupées en un réseau d'environ ${N} carrefours, toutes à double sens, à 23-30 km/h hors congestion et 54 km/h sur le périphérique et les voies rapides. Population par arrondissement (recensement INSEE), emplois par arrondissement estimés, gares et grands lieux comme pôles d'attraction. Dépôts de recharge aux portes de Paris.`:`Ville en grille de 16 × 16 carrefours espacés de 500 m, avenues à 50 km/h, rues à 30 km/h, 8 s de perte par carrefour. Population, emplois et commerces répartis autour d'un centre et de cinq pôles (gare, université, hôpital, centre commercial, zone d'activités).`} Demande horaire typique d'une semaine (pointes 8 h et 18 h, week-end plus plat), motifs domicile-travail le matin et le soir. Les demandes arrivent en temps réel : chacune est insérée dans l'itinéraire du véhicule qui minimise le temps ajouté, sous contraintes de capacité, d'attente et de détour de tous les passagers déjà affectés ; sinon elle est refusée. Prise en charge aux carrefours, sans marche ni annulation. Marche possible jusqu'à un carrefour voisin à 1,3 m/s si l'option est activée. Congestion uniforme sur la ville. Coûts proportionnels à la taille des véhicules (référence 8 places). Recharge dans 4 dépôts sans limite de bornes. Voiture de référence : ${CAR_CO2_KM*1000} g CO₂/km et ${nf(CAR_COST_KM,2)} €/km ; taxibus électrique : ${BUS_KWH_KM} kWh/km.</p></article>`;
   $('#learn').innerHTML=h}
 document.querySelector('[data-tab=learn]').addEventListener('click',renderLearn);
 
+/* =================== Cities: registry, Paris loader, switching =================== */
+const CITIES={bellerive:{build:buildBellerive},paris:{build:null}};
+const PARIS_SPEED=[6.4,7.2,8.3,15];
+function buildParis(J){
+  const nodes=J.nodes,edges=J.edges.map(([a,b,len,cl])=>[a,b,len,PARIS_SPEED[cl],cl]);
+  const hubs=J.stations.map(s=>({name:s.name,node:s.node,right:s.right}))
+    .concat(J.landmarks.filter(l=>l.label&&/Châtelet|Eiffel|Arc de|Sacré|Bastille|Nation|Italie|République|Villette/.test(l.name)).map(l=>({name:l.name,node:l.node,right:l.right})));
+  const places=[...J.stations.map(s=>({name:s.name,node:s.node,kind:'gare'})),...J.landmarks.map(l=>({name:l.name,node:l.node,kind:'lieu'})),...J.streets.map(s=>({name:s.name,node:s.node,kind:'adresse'}))];
+  return{id:'paris',name:'Paris',fictional:false,dotM:42,avgKm:6.9,nodes,edges,pop:J.pop,job:J.job,oth:J.oth,turn:4,depots:J.depots,hubs,places,
+    bbox:J.bbox,area:J.area,blocks:[6,5],
+    desc:`Paris intra-muros (${nf(J.area,0)} km², 20 arrondissements), avec ses rues principales issues d'OpenStreetMap, la Seine et ses ponts, les gares et la population de chaque arrondissement`,
+    defaults:J.defaults,ranges:{pop:[1000000,2600000,50000],fleet:[200,8000,50],share:[0.5,15,0.5]},
+    drawBase(g,V,C){const s=V.s,T=(x,y)=>[V.ox+x*s,V.oy+y*s];
+      const path=(a,close)=>{g.beginPath();for(let k=0;k<a.length;k+=2){const [X,Y]=T(a[k],a[k+1]);k?g.lineTo(X,Y):g.moveTo(X,Y)}if(close)g.closePath()};
+      const dm=Math.max(...J.arr.map(a=>a.dens));
+      for(const a of J.arr){path(a.poly,true);g.fillStyle=C.block;g.fill();g.globalAlpha=0.08+0.32*a.jobd;g.fillStyle=C.cbd;g.fill();g.globalAlpha=0.06+0.22*a.dens/dm;g.fillStyle=C.accent;g.fill();g.globalAlpha=1}
+      for(const p of J.parks){path(p,true);g.fillStyle=C.park;g.fill()}
+      for(const a of J.arr){path(a.poly,true);g.strokeStyle=C.line;g.lineWidth=1;g.stroke()}
+      g.lineCap='round';g.lineJoin='round';
+      for(const w of J.seineArea){path(w,true);g.fillStyle=C.river;g.fill()}
+      const wd={'-1':Math.max(.35,7*s),0:Math.max(.7,14*s),1:Math.max(.9,20*s),2:Math.max(1.3,30*s),3:Math.max(1.8,40*s)};
+      for(const cl of [-1,0,1,2,3]){g.strokeStyle=cl>=2?C['road-art']:C.road;g.lineWidth=wd[cl];g.globalAlpha=cl<0?.7:1;g.beginPath();for(const [c,pts] of J.roads){if(c!==cl)continue;for(let k=0;k<pts.length;k+=2){const X=V.ox+pts[k]*s,Y=V.oy+pts[k+1]*s;k?g.lineTo(X,Y):g.moveTo(X,Y)}}g.stroke();g.globalAlpha=1}
+      path(J.boundary,true);g.strokeStyle=C.muted;g.lineWidth=1.2;g.setLineDash([4,3]);g.stroke();g.setLineDash([]);
+      g.font=`600 ${Math.max(9,Math.min(13,700*s))}px "JetBrains Mono", monospace`;g.textAlign='center';g.fillStyle=C.muted;g.globalAlpha=.75;
+      for(const a of J.arr){const [X,Y]=T(a.cx,a.cy);g.fillText(a.n+(a.n===1?'er':'e'),X,Y)}g.globalAlpha=1;g.textAlign='left'}};
+}
+async function getCity(id){const c=CITIES[id];if(c.city)return c.city;
+  if(id==='paris'){const res=await fetch('paris.json');if(!res.ok)throw new Error('paris.json');c.city=buildParis(await res.json())}else c.city=c.build();return c.city}
+function applyCityParams(c){
+  PARAMS.forEach(g=>g.items.forEach(p=>{if(!p.base)p.base={min:p.min,max:p.max,step:p.step};const r=c.ranges[p.id];[p.min,p.max,p.step]=r||[p.base.min,p.base.max,p.base.step];p.v=c.defaults[p.id];P[p.id]=p.v}));
+  DEFAULTS={...P};AVG_KM=c.avgKm||4.7;REF_FARE=DEFAULTS.fareBase+DEFAULTS.fareKm*AVG_KM}
+let cityBusy=false;
+async function selectCity(id){if(cityBusy||(CITY&&CITY.id===id))return;cityBusy=true;
+  document.querySelectorAll('#citysw button').forEach(b=>b.setAttribute('aria-pressed',b.dataset.city===id));
+  $('#citymsg').textContent=id==='paris'?'Chargement de Paris : calcul des plus courts chemins…':'';
+  await new Promise(r=>setTimeout(r,30));
+  try{const c=await getCity(id);loadCity(c);applyCityParams(c);buildRail();
+    document.title='Taxibus '+c.name;$('#cityname').textContent=c.name;$('#citydesc').textContent=c.desc;
+    lastSummary=null;$('#report').innerHTML=`<div class="empty">Lancez un bilan pour voir le service rendu, le coût et la marge par trajet, l'occupation des véhicules et le CO₂ évité à ${c.name}, heure par heure.</div>`;
+    $('#optres').innerHTML='';$('#goalres').innerHTML='';goalPts=[];
+    const lf=LEVERS.find(l=>l.id==='fleet'),ls=LEVERS.find(l=>l.id==='share'),st=c.id==='paris'?50:10;
+    lf.min=Math.max(10,Math.round(P.fleet*0.4/st)*st);lf.max=Math.round(P.fleet*2/st)*st;lf.step=st;ls.min=Math.max(1,Math.round(P.share/2));ls.max=c.id==='paris'?6:25;ls.step=c.id==='paris'?0.5:1;buildGoalForm();
+    document.querySelector('.live').classList.toggle('wide',c.id==='paris');
+    resizeMap();resetLive();renderLearn();appReset();$('#citymsg').textContent='';
+    try{history.replaceState(null,'',id==='paris'?'#paris':location.pathname+location.search)}catch(e){}
+  }catch(e){$('#citymsg').textContent='Impossible de charger les données de Paris.';console.error(e)}
+  cityBusy=false}
+document.querySelectorAll('#citysw button').forEach(b=>b.addEventListener('click',()=>selectCity(b.dataset.city)));
+
+/* =================== Phone app =================== */
+const phc=$('#phmap'),phx=phc.getContext('2d');
+let app={},appSpeed=30;const fold=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const plate=id=>'TB-'+String(id+1).padStart(3,'0');
+function placeNear(node){let b=null,bd=Infinity;for(const p of CITY.places){const d=(NODEX[p.node]-NODEX[node])**2+(NODEY[p.node]-NODEY[node])**2;if(d<bd||(d===bd&&p.kind!=='adresse')){bd=d;b=p}}
+  return b?(bd<1?b.name:'Près de '+b.name):'Point sur la carte'}
+function appReset(){const home=CITY.places.find(p=>p.kind==='adresse')||CITY.places[0];
+  const start=CITY.id==='paris'?(CITY.places.find(p=>/République/.test(p.name))||home):home;
+  app={state:'search',from:{node:start.node,name:start.name},to:null,focus:'to',quote:null,req:null,layer:null,layerKey:'',events:[],lastPickEta:null,lastDropEta:null,before:0,rating:0,q:''};
+  renderSheet()}
+function sugg(q){q=fold(q.trim());const P_=CITY.places;let r=q?P_.filter(p=>fold(p.name).includes(q)):P_.filter(p=>p.kind!=='adresse');
+  if(q)r.sort((a,b)=>(fold(a.name).startsWith(q)?0:1)-(fold(b.name).startsWith(q)?0:1)||(a.kind==='adresse')-(b.kind==='adresse'));return r.slice(0,7)}
+const KIND_ICON={gare:'🚉',lieu:'📍',adresse:'🏠'};
+function renderSheet(){const el=$('#ph-sheet');if(!el||!live)return;const a=app,t=dispT;
+  if(a.state==='search'){
+    el.innerHTML=`<div class="sh-title">Où allez-vous ?</div>
+      <label class="fld"><span class="pin a">A</span><input id="ap-from" autocomplete="off" value="${esc(a.from?a.from.name:'')}" placeholder="Départ"></label>
+      <label class="fld"><span class="pin b">B</span><input id="ap-to" autocomplete="off" value="${esc(a.to?a.to.name:a.q)}" placeholder="Adresse, lieu, gare…"></label>
+      <ul class="sugg" id="ap-sugg"></ul>
+      <p class="hint">Touchez la carte pour placer le ${a.focus==='from'?'départ':'point d\'arrivée'}.</p>
+      <button class="btn primary wide" id="ap-go" ${a.from&&a.to&&a.from.node!==a.to.node?'':'disabled'}>Voir le taxibus</button>`;
+    const fill=(which)=>{const inp=$('#ap-'+which);$('#ap-sugg').innerHTML=sugg(inp.value).map((p,i)=>`<li><button type="button" data-i="${i}"><span>${KIND_ICON[p.kind]||'📍'}</span>${esc(p.name)}</button></li>`).join('');
+      const list=sugg(inp.value);$('#ap-sugg').querySelectorAll('button').forEach(b=>b.addEventListener('mousedown',e=>e.preventDefault()));
+      $('#ap-sugg').querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{const p=list[+b.dataset.i];a[which]={node:p.node,name:p.name};a.focus=which==='from'?'to':'to';a.q='';a.layerKey='';renderSheet();if(which==='from')$('#ap-to').focus()}))};
+    ['from','to'].forEach(w=>{const inp=$('#ap-'+w);inp.addEventListener('focus',()=>{a.focus=w;inp.select();fill(w);$('.hint').textContent=`Touchez la carte pour placer le ${w==='from'?'départ':'point d\'arrivée'}.`});
+      inp.addEventListener('input',()=>{if(w==='to'){a.to=null;a.q=inp.value}else a.from=null;$('#ap-go').disabled=true;fill(w)})});
+    if(!a.to&&document.activeElement===document.body)fill('to');
+    $('#ap-go').addEventListener('click',()=>{a.state='quote';a.layerKey='';renderSheet()});return}
+  if(a.state==='quote'){const q=live.quote(a.from.node,a.to.node);a.quote=q;
+    if(!q){el.innerHTML=`<div class="sh-title">Aucun taxibus disponible</div><p class="sh-p">Aucun véhicule ne peut venir vous chercher dans les ${live.P.wait} minutes sans trop retarder ses passagers. C'est ce qui arrive aux demandes refusées de la simulation.</p>
+      <div class="sh-row"><button class="btn primary wide" id="ap-retry">Réessayer</button><button class="btn wide" id="ap-back">Modifier</button></div>`;
+      $('#ap-retry').addEventListener('click',renderSheet);$('#ap-back').addEventListener('click',()=>{a.state='search';a.layerKey='';renderSheet()});return}
+    const wait=Math.max(1,Math.round((q.tPick-t)/60)),ride=Math.round((q.tDrop-q.tPick)/60),dir=Math.round(q.direct/60),co2=q.km*(CAR_CO2_KM-BUS_KWH_KM*live.P.grid/1000/Math.max(1,q.onboard+1));
+    el.innerHTML=`<div class="offer"><div class="o-top"><div><div class="o-kind">Taxibus partagé · ${live.P.cap} places</div><div class="o-plate">${plate(q.v)}</div></div><div class="o-price">${nf(q.fare,2)} €</div></div>
+      <div class="o-times"><div><b>${wait} min</b><span>arrivée du véhicule · ${hhmm(q.tPick)}</span></div><div><b>${hhmm(q.tDrop)}</b><span>arrivée à destination</span></div></div>
+      <ul class="o-facts"><li>${ride} min à bord, contre ${dir} min en voiture seul</li><li>${q.onboard?`${q.onboard} passager${q.onboard>1?'s':''} déjà à bord`:'Véhicule vide pour l\'instant'}${q.planned?`, ${q.planned} autre${q.planned>1?'s':''} prise${q.planned>1?'s':''} en charge prévue${q.planned>1?'s':''}`:''}</li><li>Environ ${nf(Math.max(0,co2),1)} kg de CO₂ évités par rapport à la voiture</li>${q.wO||q.wD?`<li>Marche : ${nf(q.wO+q.wD)} m jusqu'au point de rencontre</li>`:''}</ul></div>
+      <div class="sh-row"><button class="btn primary wide" id="ap-book">Réserver</button><button class="btn wide" id="ap-back">Retour</button></div><p class="hint">Les heures sont recalculées en continu avec la simulation.</p>`;
+    $('#ap-back').addEventListener('click',()=>{a.state='search';a.layerKey='';renderSheet()});
+    $('#ap-book').addEventListener('click',()=>{const r=live.book(a.from.node,a.to.node);if(!r){renderSheet();return}
+      a.req=r;a.state='wait';a.layerKey='';a.events=[{t:dispT,txt:`Réservé : ${plate(r.v)} vient vous chercher.`}];a.lastPickEta=r.etaPick;a.lastDropEta=r.eta;a.promised=r.eta;a.before=beforeCount();renderSheet()});return}
+  if(a.state==='wait'||a.state==='ride'){const r=a.req,v=live.V[r.v],sc=live.schedule(v);
+    const pi=v.stops.findIndex(s=>s.r===r&&s.type===0),di=v.stops.findIndex(s=>s.r===r&&s.type===1);
+    const pEta=pi>=0?sc[pi]:r.tPick,dEta=di>=0?sc[di]:r.tDrop;
+    const ev=a.events.slice(-3).reverse().map(e=>`<li><span>${hhmm(e.t)}</span>${e.txt}</li>`).join('');
+    if(a.state==='wait'){const m=Math.max(0,Math.ceil((pEta-t)/60)),km=L[(v.nxt>=0?v.nxt:v.cur)*N+r.o]/1000;
+      el.innerHTML=`<div class="track"><div class="t-big">${m<=0?'Votre taxibus arrive':`Arrive dans ${m} min`}</div><div class="t-sub">${plate(v.id)} · ${nf(km,1)} km · ${v.load} passager${v.load>1?'s':''} à bord</div>
+        <div class="t-line"><span>Prise en charge</span><b>${hhmm(pEta)}</b></div><div class="t-line"><span>Arrivée prévue</span><b>${hhmm(dEta)}</b></div>
+        <div class="t-line"><span>Départ</span><b>${esc(a.from.name)}</b></div></div><ul class="evts">${ev}</ul>`}
+    else{const prog=Math.max(0,Math.min(1,(t-r.tPick)/Math.max(60,dEta-r.tPick))),late=Math.round((dEta-a.promised)/60);
+      const next=v.stops.slice(0,Math.max(0,di)).slice(0,3).map(s=>`<li>${s.type===0?'Prise en charge':'Dépose'} d'un passager · ${esc(placeNear(s.node))}</li>`).join('');
+      el.innerHTML=`<div class="track"><div class="t-big">En route vers ${esc(a.to.name)}</div><div class="t-sub">${plate(v.id)} · ${v.load-1} autre${v.load-1>1?'s':''} passager${v.load-1>1?'s':''} à bord</div>
+        <div class="bar"><div style="width:${prog*100}%"></div></div>
+        <div class="t-line"><span>Arrivée prévue</span><b>${hhmm(dEta)}${late>0?` <em class="late">+${late} min</em>`:''}</b></div><div class="t-line"><span>Annoncée à la réservation</span><b>${hhmm(a.promised)}</b></div></div>
+        ${next?`<div class="sh-sub">Avant votre arrivée</div><ul class="nexts">${next}</ul>`:'<p class="hint">Plus aucun arrêt avant le vôtre.</p>'}<ul class="evts">${ev}</ul>`}
+    return}
+  if(a.state==='done'){const r=a.req,w=Math.round((r.tPick-r.t)/60),ride=Math.round((r.tDrop-r.tPick)/60),dir=Math.round(r.direct/60),late=Math.round((r.tDrop-a.promised)/60);
+    el.innerHTML=`<div class="sh-title">Vous êtes arrivé</div><div class="summary">
+      <div><b>${w} min</b><span>d'attente</span></div><div><b>${ride} min</b><span>à bord (${dir} min en voiture)</span></div>
+      <div><b>${nf(r.fare,2)} €</b><span>payés</span></div><div><b>${late<=0?'À l\'heure':'+'+late+' min'}</b><span>vs heure annoncée</span></div></div>
+      <div class="stars" role="group" aria-label="Noter le trajet">${[1,2,3,4,5].map(i=>`<button type="button" data-s="${i}" aria-label="${i} étoile${i>1?'s':''}" class="${i<=a.rating?'on':''}">★</button>`).join('')}</div>
+      <button class="btn primary wide" id="ap-new">Nouveau trajet</button>`;
+    el.querySelectorAll('.stars button').forEach(b=>b.addEventListener('click',()=>{a.rating=+b.dataset.s;renderSheet()}));
+    $('#ap-new').addEventListener('click',()=>{const f={node:a.to.node,name:a.to.name};appReset();app.from=f;renderSheet()})}
+}
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+function beforeCount(){const r=app.req,v=live.V[r.v];const i=v.stops.findIndex(s=>s.r===r&&s.type===0);return i<0?0:i}
+let lastSheet=0;
+function appTick(ts){const a=app;if(!a.state||!live)return;
+  if((a.state==='wait'||a.state==='ride')&&a.req){const r=a.req,v=live.V[r.v];
+    if(a.state==='wait'&&r.tPick>=0){a.state='ride';a.layerKey='';a.events.push({t:r.tPick,txt:`Vous êtes monté dans ${plate(v.id)}.`})}
+    if(r.tDrop>=0){a.state='done';a.layerKey='';renderSheet();return}
+    const sc=live.schedule(v),pi=v.stops.findIndex(s=>s.r===r&&s.type===0),di=v.stops.findIndex(s=>s.r===r&&s.type===1);
+    if(a.state==='wait'){const b=beforeCount();if(b>a.before)a.events.push({t:dispT,txt:'Un autre passager sera pris en charge avant vous.'});a.before=b}
+    const dEta=di>=0?sc[di]:null;if(dEta!=null&&a.lastDropEta!=null&&dEta-a.lastDropEta>90){a.events.push({t:dispT,txt:`Arrivée décalée de ${Math.round((dEta-a.lastDropEta)/60)} min (${a.state==='ride'?'un passager ajouté sur le trajet ou du trafic':'trafic ou nouveau passager'}).`});a.lastDropEta=dEta}
+    else if(dEta!=null&&dEta<a.lastDropEta)a.lastDropEta=dEta}
+  if(ts-lastSheet>400&&a.state!=='search'&&a.state!=='done'){lastSheet=ts;renderSheet()}
+  $('#ph-time').textContent=hhmm(dispT);$('#ph-day').textContent=DAYS_FULL[Math.floor(dispT/86400)%7];
+  drawPhone()}
+function phView(){const a=app,pts=[];const add=n=>{if(n!=null&&n>=0)pts.push([NODEX[n],NODEY[n]])};
+  if(a.from)add(a.from.node);if(a.to)add(a.to.node);
+  if(a.state==='quote'&&a.quote){const v=live.V[a.quote.v];add(v.nxt>=0?v.nxt:v.cur)}
+  if((a.state==='wait')&&a.req){const v=live.V[a.req.v];add(v.nxt>=0?v.nxt:v.cur)}
+  if(!pts.length)add(0);
+  let x0=Math.min(...pts.map(p=>p[0])),x1=Math.max(...pts.map(p=>p[0])),y0=Math.min(...pts.map(p=>p[1])),y1=Math.max(...pts.map(p=>p[1]));
+  const minS=CITY.id==='paris'?1800:1500,cx=(x0+x1)/2,cy=(y0+y1)/2,w=phc.clientWidth||320,h=phc.clientHeight||300;
+  let bw=Math.max(minS,(x1-x0)*1.35),bh=Math.max(minS*h/w,(y1-y0)*1.35);if(bw/bh<w/h)bw=bh*w/h;else bh=bw*h/w;
+  return[cx-bw/2,cy-bh/2,cx+bw/2,cy+bh/2]}
+function drawPhone(){if(!CITY||!live||!phc.clientWidth)return;const dpr=window.devicePixelRatio||1,w=phc.clientWidth,h=phc.clientHeight;
+  if(phc.width!==Math.round(w*dpr)||phc.height!==Math.round(h*dpr)){phc.width=Math.round(w*dpr);phc.height=Math.round(h*dpr);app.layerKey=''}
+  const key=app.state+'|'+(app.from&&app.from.node)+'|'+(app.to&&app.to.node)+'|'+w+'x'+h+'|'+CITY.id+'|'+document.documentElement.dataset.theme;
+  if(app.layerKey!==key){app.layerKey=key;const bb=phView(),s=w/(bb[2]-bb[0]);app.view={s,ox:-bb[0]*s,oy:-bb[1]*s,w,h};
+    const c=document.createElement('canvas');c.width=phc.width;c.height=phc.height;const g=c.getContext('2d');g.scale(dpr,dpr);drawCityLayer(g,app.view,colors,'small');app.layer=c}
+  const V=app.view,X=i=>V.ox+NODEX[i]*V.s,Y=i=>V.oy+NODEY[i]*V.s,g=phx,t=dispT;
+  g.setTransform(1,0,0,1,0,0);g.drawImage(app.layer,0,0);g.setTransform(dpr,0,0,dpr,0,0);
+  const vp=v=>{if(v.nxt>=0){const f=Math.max(0,Math.min(1,(t-v.tDep)/((v.tArr-v.tDep)||1)));return[X(v.cur)+(X(v.nxt)-X(v.cur))*f,Y(v.cur)+(Y(v.nxt)-Y(v.cur))*f]}return[X(v.cur),Y(v.cur)]};
+  const mine=app.req&&(app.state==='wait'||app.state==='ride')?live.V[app.req.v]:app.state==='quote'&&app.quote?live.V[app.quote.v]:null;
+  g.globalAlpha=.55;for(const v of live.V){if(v===mine||v.state===2||v.toCharge)continue;const [x,y]=vp(v);if(x<-5||y<-5||x>w+5||y>h+5)continue;g.fillStyle=v.load>0?colors.accent:colors.muted;g.beginPath();g.arc(x,y,3,0,7);g.fill()}g.globalAlpha=1;
+  const pin=(n,lab,col)=>{const x=X(n),y=Y(n);g.fillStyle=col;g.beginPath();g.arc(x,y-14,10,Math.PI*.15,Math.PI*.85,true);g.lineTo(x,y);g.closePath();g.fill();g.fillStyle=colors.surface;g.font='700 11px Barlow, sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText(lab,x,y-15);g.textBaseline='alphabetic';g.textAlign='left'};
+  if(mine){const [mx,my]=vp(mine);g.strokeStyle=colors.accent;g.lineWidth=4;g.lineCap='round';g.lineJoin='round';g.beginPath();g.moveTo(mx,my);let node=mine.nxt>=0?mine.nxt:mine.cur;g.lineTo(X(node),Y(node));
+    const route=[...mine.stops];if(app.state==='quote')route.push({node:app.from.node},{node:app.to.node});
+    for(const s of route){let k=0;while(node!==s.node&&k++<400){node=NX[node*N+s.node];g.lineTo(X(node),Y(node))}if(app.req&&s.r===app.req&&s.type===1)break}g.globalAlpha=.85;g.stroke();g.globalAlpha=1;
+    for(const s of mine.stops){if(app.req&&s.r===app.req)continue;g.fillStyle=s.type===0?colors.amber:colors.ink;g.beginPath();g.arc(X(s.node),Y(s.node),3.5,0,7);g.fill()}}
+  if(app.from)pin(app.from.node,'A',colors.amber);if(app.to)pin(app.to.node,'B',colors.ink);
+  if(mine){const [mx,my]=vp(mine);g.fillStyle=colors.accent;g.strokeStyle=colors.surface;g.lineWidth=2.5;g.beginPath();g.arc(mx,my,8,0,7);g.fill();g.stroke();
+    g.font='700 10px "JetBrains Mono", monospace';const lb=plate(mine.id),tw=g.measureText(lb).width;g.fillStyle=colors.ink;g.fillRect(mx-tw/2-4,my-26,tw+8,15);g.fillStyle=colors.surface;g.textAlign='center';g.fillText(lb,mx,my-15);g.textAlign='left'}
+}
+phc.addEventListener('click',e=>{if(app.state!=='search'||!app.view)return;const rc=phc.getBoundingClientRect(),x=(e.clientX-rc.left-app.view.ox)/app.view.s,y=(e.clientY-rc.top-app.view.oy)/app.view.s;
+  const n=nearestNode(x,y),p={node:n,name:placeNear(n)};if(app.focus==='from')app.from=p;else app.to=p;app.focus=app.focus==='from'?'to':'from';app.q='';renderSheet()});
+$('#app-speed').addEventListener('change',e=>appSpeed=+e.target.value);
+document.querySelectorAll('[data-jump]').forEach(b=>b.addEventListener('click',async()=>{const target=+b.dataset.jump*3600;$('#jumpmsg').textContent='Simulation jusqu\'à '+hhmm(target)+'…';await new Promise(r=>setTimeout(r,20));
+  if(target<=dispT){resetLive();}if(target>dispT){live.runTo(target);dispT=live.t}appReset();$('#jumpmsg').textContent='';}));
+
 /* =================== Boot =================== */
-buildRail();renderLearn();
-function boot(){resizeMap();resetLive();requestAnimationFrame(frame)}
+async function boot(){await selectCity(location.hash==='#paris'?'paris':'bellerive');requestAnimationFrame(frame)}
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(boot);else boot();
 window.__taxibus={makeSim,summarize,P,evalDay};
 </script>
